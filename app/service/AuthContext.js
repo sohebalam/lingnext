@@ -7,7 +7,7 @@ import {
 	GoogleAuthProvider,
 	signOut,
 } from "firebase/auth";
-import { auth } from "@/app/firebase/config";
+import { auth } from "@/app/service/firebase/config";
 
 const AuthContext = createContext();
 

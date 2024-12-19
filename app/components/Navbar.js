@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Logo from "../../public/assets/Logo.png";
 import User from "../../public/assets/User.svg";
@@ -9,10 +10,10 @@ import React, { useEffect, useState } from "react";
 
 const navLinks = [
 	{ name: "Home", href: "/" },
-	{ name: "Dashboard", href: "/dashboard" },
+	{ name: "Dashboard", href: "/product/dashboard" },
 	{ name: "Contact Us", href: "/contact" },
-	{ name: "Bookform", href: "/forms/bookform" },
-	{ name: "Forms", href: "/forms" },
+	{ name: "Pageform", href: "/product/forms/pageform" },
+	{ name: "Forms", href: "/product/forms" },
 ];
 
 export function Navbar() {
@@ -27,7 +28,7 @@ export function Navbar() {
 
 	const handleSignInClick = () => {
 		console.log("Navigating to login");
-		router.push("/login");
+		router.push("/auth/login");
 	};
 
 	const handleLogOutClick = () => {
@@ -72,7 +73,8 @@ export function Navbar() {
 						className="flex items-center gap-x-2 cursor-pointer"
 						onClick={handleSignInClick}
 					>
-						<Image src={User} alt="User Profile" />
+						<Image src={User} alt="User Profile" onClick={handleSignInClick} />
+
 						<span className="hidden font-medium text-[#36485C] lg:block">
 							Sign in
 						</span>
