@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config";
-import { collection, addDoc, getDocs } from "firebase/firestore";
-import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function ManagePages() {
 	const [languages, setLanguages] = useState([
@@ -12,7 +11,7 @@ export default function ManagePages() {
 	]); // Default languages
 	const [texts, setTexts] = useState([
 		{ language: "en", text: "" },
-		{ language: "ar", text: "" }, // Default second text field for Arabic
+		{ language: "ar", text: "" },
 	]);
 	const [image, setImage] = useState(null);
 	const [loading, setLoading] = useState(false);
@@ -27,10 +26,12 @@ export default function ManagePages() {
 					id: doc.id,
 					...doc.data(),
 				}));
+
+				console.log("Fetched languages:", fetchedLanguages); // Verify fetched data
+
 				if (fetchedLanguages.length > 0) {
-					setLanguages((prev) => [...prev, ...fetchedLanguages]);
+					setLanguages((prev) => [...prev, ...fetchedLanguages]); // Merge default and fetched languages
 				}
-				console.log("Fetched languages:", fetchedLanguages);
 			} catch (error) {
 				console.error("Error fetching languages:", error.message);
 			}
@@ -102,6 +103,8 @@ export default function ManagePages() {
 		setTexts([...texts, { language: "en", text: "" }]);
 	};
 
+	console.log("Current languages state:", languages); // Log state after it is updated
+
 	return (
 		<div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-md shadow-md space-y-8">
 			<h2 className="text-2xl font-bold text-gray-800 mb-4">Manage Pages</h2>
@@ -138,9 +141,11 @@ export default function ManagePages() {
 								<option value="" disabled>
 									Select Language
 								</option>
+								{/* Display both default and fetched languages */}
 								{languages.map((language) => (
 									<option key={language.id} value={language.id}>
-										{language.name}
+										{language.languageName || language.name}{" "}
+										{/* Corrected the name reference */}
 									</option>
 								))}
 							</select>
