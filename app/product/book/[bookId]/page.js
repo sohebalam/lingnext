@@ -121,17 +121,25 @@ export default function BookDetailPage() {
 					<img
 						src={page.image || "/fallback-image.jpg"}
 						alt={`Page ${currentPage + 1}`}
-						className="max-w-full h-auto"
+						className={`${
+							page.isCover
+								? "w-full h-screen object-cover"
+								: "max-w-full h-auto"
+						}`} // Apply full-page styling if isCover is true
 					/>
 				</div>
 				<div className="mt-4 text-center">
-					<p className="text-lg">
-						{page.originalText || "No text available for this page."}
-					</p>
 					{page.translations && page.translations.length > 0 && (
 						<div>
 							<p className="text-lg mt-2 text-blue-500">
 								{page.translations[0].text || "No translation available."}
+							</p>
+						</div>
+					)}
+					{page.translations && page.translations.length > 0 && (
+						<div>
+							<p className="text-lg mt-2 text-blue-500">
+								{page.translations[1].text || "No translation available."}
 							</p>
 						</div>
 					)}
