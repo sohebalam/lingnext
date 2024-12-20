@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config";
 import { collection, getDocs } from "firebase/firestore";
+import Language from "@/app/models/Languages";
 
 export default function ManagePages() {
 	const [languages, setLanguages] = useState([
-		{ id: "en", name: "English" },
-		{ id: "ar", name: "Arabic" },
+		new Language("English", "en"),
+		new Language("Arabic", "ar"),
 	]); // Default languages
 	const [texts, setTexts] = useState([
 		{ language: "en", text: "" },
@@ -20,18 +21,18 @@ export default function ManagePages() {
 	useEffect(() => {
 		const fetchLanguages = async () => {
 			try {
-				// Fetch languages
+				// Fetch languages from Firestore
 				const languagesSnapshot = await getDocs(collection(db, "languages"));
-				const fetchedLanguages = languagesSnapshot.docs.map((doc) => ({
-					id: doc.id,
-					...doc.data(),
-				}));
+				const fetchedLanguages = languagesSnapshot.docs.map((doc) => {
+					const data = doc.data();
+					// Create a Language instance for each fetched language
+					return new Language(data.languageName, data.languageCode);
+				});
 
 				console.log("Fetched languages:", fetchedLanguages); // Verify fetched data
 
-				if (fetchedLanguages.length > 0) {
-					setLanguages((prev) => [...prev, ...fetchedLanguages]); // Merge default and fetched languages
-				}
+				// Merge default and fetched languages
+				setLanguages((prev) => [...prev, ...fetchedLanguages]);
 			} catch (error) {
 				console.error("Error fetching languages:", error.message);
 			}
@@ -129,7 +130,7 @@ export default function ManagePages() {
 				<div>
 					<h3 className="text-lg font-medium text-gray-800">Texts</h3>
 					{texts.map((text, index) => (
-						<div key={index} className="space-y-2">
+						<div key={`text-${index}`} className="space-y-2">
 							<select
 								value={text.language}
 								onChange={(e) =>
@@ -142,8 +143,11 @@ export default function ManagePages() {
 									Select Language
 								</option>
 								{/* Display both default and fetched languages */}
-								{languages.map((language) => (
-									<option key={language.id} value={language.id}>
+								{languages.map((language, langIndex) => (
+									<option
+										key={`language-${language.id || langIndex}`}
+										value={language.id}
+									>
 										{language.languageName || language.name}{" "}
 										{/* Corrected the name reference */}
 									</option>
@@ -161,6 +165,7 @@ export default function ManagePages() {
 							/>
 						</div>
 					))}
+
 					<button
 						type="button"
 						onClick={addText}
