@@ -42,13 +42,6 @@ export default function ManagePages() {
 		setPages((prev) => prev.filter((_, i) => i !== index));
 	};
 
-	// Toggle collapse for a page
-	const toggleCollapse = (index) => {
-		const updatedPages = [...pages];
-		updatedPages[index].isCollapsed = !updatedPages[index].isCollapsed;
-		setPages(updatedPages);
-	};
-
 	// Update page properties
 	const updatePage = (index, key, value) => {
 		const updatedPages = [...pages];
@@ -155,13 +148,6 @@ export default function ManagePages() {
 								Page {pageIndex + 1}
 							</h3>
 							<div className="flex space-x-4">
-								<button
-									type="button"
-									onClick={() => toggleCollapse(pageIndex)}
-									className="text-blue-600 hover:underline"
-								>
-									{page.isCollapsed ? "Expand" : "Collapse"}
-								</button>
 								{pages.length > 1 && (
 									<button
 										type="button"
