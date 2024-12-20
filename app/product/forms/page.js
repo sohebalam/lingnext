@@ -11,15 +11,16 @@ import {
 	arrayUnion,
 } from "firebase/firestore";
 import { Navbar } from "@/app/components/Navbar";
+import Book from "@/app/models/Book";
 
 export default function ManageLevelsBooks() {
 	const [levels, setLevels] = useState([]);
 	const [books, setBooks] = useState([]);
 	const [selectedLevel, setSelectedLevel] = useState("");
 	const [selectedBook, setSelectedBook] = useState("");
+	const [selectedPage, setSelectedPage] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [languages, setLanguages] = useState([]);
-
+	const [pages, setPages] = useState([]);
 	// Fetch levels and books initially
 	useEffect(() => {
 		const fetchLevels = async () => {
@@ -32,7 +33,11 @@ export default function ManageLevelsBooks() {
 		const fetchBooks = async () => {
 			const booksSnapshot = await getDocs(collection(db, "books"));
 			setBooks(
-				booksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+				booksSnapshot.docs.map((doc) => ({
+					id: doc.id,
+					title: doc.data().title || "", // Fallback for backward compatibility
+					pages: doc.data().pages || [], // Ensure pages is an array
+				}))
 			);
 		};
 
@@ -65,13 +70,22 @@ export default function ManageLevelsBooks() {
 	const handleBookSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		const bookName = e.target.bookName.value;
+		const bookTitle = e.target.bookTitle.value;
 
 		try {
-			await addDoc(collection(db, "books"), { name: bookName, levelId: null });
+			const newBook = {
+				...Book,
+				title: bookTitle,
+				pages: [], // Initialize with an empty pages array
+			};
+
+			await addDoc(collection(db, "books"), newBook);
 			const booksSnapshot = await getDocs(collection(db, "books"));
 			setBooks(
-				booksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+				booksSnapshot.docs.map((doc) => ({
+					id: doc.id,
+					...doc.data(),
+				}))
 			);
 			alert("Book added successfully!");
 		} catch (error) {
@@ -94,13 +108,8 @@ export default function ManageLevelsBooks() {
 				return;
 			}
 
-			// Log book and level IDs to check
-			console.log("Selected Book ID:", selectedBook);
-			console.log("Selected Level ID:", selectedLevel);
-
 			// Create a reference to the level document
 			const levelRef = doc(db, "levels", selectedLevel);
-			console.log("Level Ref:", levelRef.path);
 
 			// Update the level document by adding the book's ID to the books array
 			await updateDoc(levelRef, {
@@ -121,39 +130,52 @@ export default function ManageLevelsBooks() {
 			setLoading(false);
 		}
 	};
-	const handleLanguageSubmit = async (e) => {
+
+	// Fetch books initially
+	// Fetch books and pages initially
+	useEffect(() => {
+		const fetchBooks = async () => {
+			const booksSnapshot = await getDocs(collection(db, "books"));
+			setBooks(
+				booksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+			);
+		};
+
+		const fetchPages = async () => {
+			const pagesSnapshot = await getDocs(collection(db, "pages"));
+			setPages(
+				pagesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+			);
+		};
+
+		fetchBooks();
+		fetchPages();
+	}, []);
+
+	// Add a selected page to the selected book
+	const handlePageSubmit = async (e) => {
 		e.preventDefault();
+
+		if (!selectedBook || !selectedPage) {
+			alert("Please select both a book and a page.");
+			return;
+		}
+
 		setLoading(true);
-		const languageName = e.target.languageName.value.trim().toLowerCase(); // Normalize input for uniqueness check
 
 		try {
-			// Fetch all languages
-			const languagesSnapshot = await getDocs(collection(db, "languages"));
-			const languageExists = languagesSnapshot.docs.some((doc) => {
-				const docData = doc.data();
-				// Ensure the name field exists before checking
-				return docData.name && docData.name.toLowerCase() === languageName;
+			// Reference to the selected book document
+			const bookRef = doc(db, "books", selectedBook);
+
+			// Update the book's pages array
+			await updateDoc(bookRef, {
+				pages: arrayUnion(selectedPage),
 			});
 
-			if (languageExists) {
-				alert("Language already exists!");
-			} else {
-				// Add the new language to the collection
-				await addDoc(collection(db, "languages"), { name: languageName });
-				const updatedLanguagesSnapshot = await getDocs(
-					collection(db, "languages")
-				);
-				setLanguages(
-					updatedLanguagesSnapshot.docs.map((doc) => ({
-						id: doc.id,
-						...doc.data(),
-					}))
-				);
-				alert("Language added successfully!");
-			}
+			alert("Page added to the book successfully!");
 		} catch (error) {
-			console.error("Error adding language: ", error);
-			alert("Failed to add language.");
+			console.error("Error adding page to the book: ", error);
+			alert("Failed to add page to the book.");
 		} finally {
 			setLoading(false);
 		}
@@ -163,28 +185,6 @@ export default function ManageLevelsBooks() {
 		<>
 			<Navbar />
 			<div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-md shadow-md space-y-8">
-				{/* Add Language Form */}
-				<div>
-					<h2 className="text-2xl font-bold text-gray-800 mb-4">
-						Add Language
-					</h2>
-					<form onSubmit={handleLanguageSubmit} className="space-y-4">
-						<input
-							type="text"
-							name="languageName"
-							placeholder="Enter language name"
-							required
-							className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
-						/>
-						<button
-							type="submit"
-							disabled={loading}
-							className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
-						>
-							{loading ? "Loading..." : "Add Language"}
-						</button>
-					</form>
-				</div>
 				{/* Level Form */}
 				<div>
 					<h2 className="text-2xl font-bold text-gray-800 mb-4">Add Level</h2>
@@ -212,8 +212,8 @@ export default function ManageLevelsBooks() {
 					<form onSubmit={handleBookSubmit} className="space-y-4">
 						<input
 							type="text"
-							name="bookName"
-							placeholder="Enter book name"
+							name="bookTitle"
+							placeholder="Enter book title"
 							required
 							className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
 						/>
@@ -248,7 +248,7 @@ export default function ManageLevelsBooks() {
 								</option>
 								{books.map((book) => (
 									<option key={book.id} value={book.id}>
-										{book.name}
+										{book.title}
 									</option>
 								))}
 							</select>
@@ -281,6 +281,68 @@ export default function ManageLevelsBooks() {
 							{loading ? "Loading..." : "Assign Book to Level"}
 						</button>
 					</form>
+					{/* Assign Pages to Books form */}
+					<div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-md shadow-md space-y-8">
+						{/* Select Book */}
+						<div>
+							<h2 className="text-2xl font-bold text-gray-800 mb-4">
+								Select Book
+							</h2>
+							<select
+								value={selectedBook}
+								onChange={(e) => setSelectedBook(e.target.value)}
+								required
+								className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+							>
+								<option value="" disabled>
+									Select a book
+								</option>
+								{books.map((book) => (
+									<option key={book.id} value={book.id}>
+										{book.title}
+									</option>
+								))}
+							</select>
+						</div>
+
+						{/* Select Page */}
+						<div>
+							<h2 className="text-2xl font-bold text-gray-800 mb-4">
+								Select Page
+							</h2>
+							<select
+								value={selectedPage}
+								onChange={(e) => setSelectedPage(e.target.value)}
+								required
+								className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+							>
+								<option value="" disabled>
+									Select a page
+								</option>
+								{pages.map((page) => (
+									<option key={page.id} value={page.id}>
+										{page.id}
+									</option>
+								))}
+							</select>
+						</div>
+
+						{/* Add Page to Book */}
+						<div>
+							<h2 className="text-2xl font-bold text-gray-800 mb-4">
+								Add Page
+							</h2>
+							<form onSubmit={handlePageSubmit} className="space-y-4">
+								<button
+									type="submit"
+									disabled={loading}
+									className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+								>
+									{loading ? "Loading..." : "Add Page to Book"}
+								</button>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</>
