@@ -14,6 +14,7 @@ const navLinks = [
 	{ name: "Contact Us", href: "/contact" },
 	{ name: "Pageform", href: "/product/forms/pageform" },
 	{ name: "Forms", href: "/product/forms" },
+	{ name: "Languages", href: "/product/forms/language" },
 ];
 
 export function Navbar() {
