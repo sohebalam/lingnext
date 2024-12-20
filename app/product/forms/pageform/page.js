@@ -1,93 +1,125 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { db } from "@/app/service/firebase/config";
-import { collection, getDocs, addDoc } from "firebase/firestore";
-import Language from "@/app/models/Languages";
+import { collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function ManagePages() {
-	const [languages, setLanguages] = useState([
-		new Language("English", "en"),
-		new Language("Arabic", "ar"),
-	]); // Default languages
-	const [texts, setTexts] = useState([
-		{ language: "en", text: "" },
-		{ language: "ar", text: "" },
+	const [pages, setPages] = useState([
+		{
+			id: Date.now().toString(),
+			image: null,
+			isCover: false,
+			translations: [
+				{ language: "en", text: "" },
+				{ language: "ar", text: "" },
+			],
+			isCollapsed: false,
+		},
 	]);
-	const [image, setImage] = useState(null);
-	const [title, setTitle] = useState(""); // Book title
 	const [loading, setLoading] = useState(false);
-	const [isCover, setIsCover] = useState(false); // To specify if the page is the cover
-	const [isTranslationsCollapsed, setIsTranslationsCollapsed] = useState(true); // State for collapsing translations section
+	const [title, setTitle] = useState(""); // Book title
 
-	// Fetch languages only on mount
-	useEffect(() => {
-		const fetchLanguages = async () => {
-			try {
-				// Fetch languages from Firestore
-				const languagesSnapshot = await getDocs(collection(db, "languages"));
-				const fetchedLanguages = languagesSnapshot.docs.map((doc) => {
-					const data = doc.data();
-					// Create a Language instance for each fetched language
-					return new Language(data.languageName, data.languageCode);
-				});
+	// Add a new page with default values
+	const addPage = () => {
+		setPages((prev) => [
+			...prev,
+			{
+				id: Date.now().toString(),
+				image: null,
+				isCover: false,
+				translations: [
+					{ language: "en", text: "" },
+					{ language: "ar", text: "" },
+				],
+				isCollapsed: false,
+			},
+		]);
+	};
 
-				console.log("Fetched languages:", fetchedLanguages); // Verify fetched data
+	// Remove a page
+	const removePage = (index) => {
+		setPages((prev) => prev.filter((_, i) => i !== index));
+	};
 
-				// Merge default and fetched languages
-				setLanguages((prev) => [...prev, ...fetchedLanguages]);
-			} catch (error) {
-				console.error("Error fetching languages:", error.message);
-			}
-		};
+	// Toggle collapse for a page
+	const toggleCollapse = (index) => {
+		const updatedPages = [...pages];
+		updatedPages[index].isCollapsed = !updatedPages[index].isCollapsed;
+		setPages(updatedPages);
+	};
 
-		fetchLanguages();
-	}, []);
+	// Update page properties
+	const updatePage = (index, key, value) => {
+		const updatedPages = [...pages];
+		updatedPages[index][key] = value;
+		setPages(updatedPages);
+	};
 
-	// Handle form submission to create a new page and book
-	const handleBookSubmit = async (e) => {
+	// Update translation for a specific page
+	const updateTranslation = (pageIndex, translationIndex, key, value) => {
+		const updatedPages = [...pages];
+		updatedPages[pageIndex].translations[translationIndex][key] = value;
+		setPages(updatedPages);
+	};
+
+	// Add a translation to a page
+	const addTranslation = (pageIndex) => {
+		const updatedPages = [...pages];
+		updatedPages[pageIndex].translations.push({ language: "", text: "" });
+		setPages(updatedPages);
+	};
+
+	// Remove a translation from a page
+	const removeTranslation = (pageIndex, translationIndex) => {
+		const updatedPages = [...pages];
+		updatedPages[pageIndex].translations.splice(translationIndex, 1);
+		setPages(updatedPages);
+	};
+
+	// Submit the book with pages
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
 
-		// Validation: Ensure an image, title, and texts are provided
-		if (!title || !image || texts.some((t) => !t.language || !t.text)) {
-			setLoading(false);
-			return;
-		}
-
-		if (languages.length < 2) {
-			setLoading(false);
-			return;
-		}
-
 		try {
-			let imageUrl = null;
-			const storage = getStorage();
-
-			// Upload image to storage
-			if (image) {
-				const storageRef = ref(storage, `pages/${image.name}`);
-				await uploadBytes(storageRef, image);
-				imageUrl = await getDownloadURL(storageRef);
+			// Validation: Ensure the title and required fields are filled
+			if (
+				!title ||
+				pages.some(
+					(page) =>
+						!page.image ||
+						(!page.isCover && page.translations.some((t) => !t.text))
+				)
+			) {
+				alert("Please fill out all required fields.");
+				setLoading(false);
+				return;
 			}
 
-			// Define the page structure to match the Book model
-			const newPage = {
-				id: Date.now().toString(), // Use a unique ID for the page
-				imageUrl,
-				isCover, // Set whether this page is the cover
-				translations: texts,
-			};
+			const storage = getStorage();
+
+			const updatedPages = await Promise.all(
+				pages.map(async (page) => {
+					let imageUrl = null;
+
+					if (page.image) {
+						const storageRef = ref(storage, `pages/${page.image.name}`);
+						await uploadBytes(storageRef, page.image);
+						imageUrl = await getDownloadURL(storageRef);
+					}
+
+					return { ...page, image: imageUrl };
+				})
+			);
 
 			const newBook = {
 				title,
-				pages: [newPage], // Add the new page to the book's pages
+				pages: updatedPages,
 			};
 
-			// Add the book to the 'books' collection
 			await addDoc(collection(db, "books"), newBook);
-			alert("Book and page added successfully!");
+			alert("Book and pages added successfully!");
 		} catch (error) {
 			console.error("Error adding book:", error.message);
 		}
@@ -95,46 +127,12 @@ export default function ManagePages() {
 		setLoading(false);
 	};
 
-	// Handle image selection
-	const handleFileChange = (e) => {
-		const file = e.target.files[0];
-		if (file) {
-			setImage(file);
-		}
-	};
-
-	// Handle text input change
-	const handleTextChange = (index, field, value) => {
-		const updatedTexts = [...texts];
-		updatedTexts[index][field] = value;
-		setTexts(updatedTexts);
-	};
-
-	// Add a new text field
-	const addText = () => {
-		setTexts([...texts, { language: "en", text: "" }]);
-	};
-
-	// Remove a text field
-	const removeText = (index) => {
-		const updatedTexts = texts.filter((_, i) => i !== index);
-		setTexts(updatedTexts);
-	};
-
-	// Toggle translations section collapse/expand
-	const toggleTranslationsCollapse = () => {
-		setIsTranslationsCollapsed(!isTranslationsCollapsed);
-	};
-
-	console.log("Current languages state:", languages); // Log state after it is updated
-
 	return (
 		<div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-md shadow-md space-y-8">
 			<h2 className="text-2xl font-bold text-gray-800 mb-4">Manage Pages</h2>
 
-			{/* Book Form */}
-			<form onSubmit={handleBookSubmit} className="space-y-4">
-				{/* Title Input */}
+			<form onSubmit={handleSubmit} className="space-y-4">
+				{/* Book Title */}
 				<div>
 					<label className="block font-medium text-gray-700">Book Title</label>
 					<input
@@ -146,143 +144,150 @@ export default function ManagePages() {
 					/>
 				</div>
 
-				{/* Image Input */}
-				<div>
-					<label className="block font-medium text-gray-700">
-						Upload Image
-					</label>
-					<input
-						type="file"
-						onChange={handleFileChange}
-						accept="image/*"
-						required
-						className="mt-1 block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-					/>
-				</div>
-
-				{/* Cover Page Toggle */}
-				<div>
-					<label className="block font-medium text-gray-700">
-						Is this page the cover?
-					</label>
-					<input
-						type="checkbox"
-						checked={isCover}
-						onChange={() => setIsCover((prev) => !prev)}
-						className="mt-1"
-					/>
-				</div>
-
-				{/* Always Show First Two Translations */}
-				<div>
-					<h3 className="text-lg font-medium text-gray-800">Translations</h3>
-					{texts.slice(0, 2).map((text, index) => (
-						<div key={`text-${index}`} className="space-y-2">
-							<select
-								value={text.language}
-								onChange={(e) =>
-									handleTextChange(index, "language", e.target.value)
-								}
-								required
-								className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
-							>
-								<option value="" disabled>
-									Select Language
-								</option>
-								{/* Display both default and fetched languages */}
-								{languages.map((language, langIndex) => (
-									<option
-										key={`language-${language.id || langIndex}`}
-										value={language.id}
-									>
-										{language.languageName || language.name}{" "}
-									</option>
-								))}
-							</select>
-							<textarea
-								placeholder="Text"
-								rows="2"
-								value={text.text}
-								onChange={(e) =>
-									handleTextChange(index, "text", e.target.value)
-								}
-								required
-								className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
-							/>
-							{/* <button
-								type="button"
-								onClick={() => removeText(index)}
-								className="text-red-600 hover:underline"
-							>
-								Remove Translation
-							</button> */}
-						</div>
-					))}
-				</div>
-
-				{/* Collapsible Additional Translations */}
-				<div>
-					<button
-						type="button"
-						onClick={toggleTranslationsCollapse}
-						className="text-blue-600 hover:underline mt-2"
+				{/* Pages */}
+				{pages.map((page, pageIndex) => (
+					<div
+						key={page.id}
+						className="p-4 border border-gray-300 rounded-md bg-white space-y-4"
 					>
-						{isTranslationsCollapsed ? "Show More Translations" : "Hide More"}
-					</button>
-
-					{/* {!isTranslationsCollapsed && ( */}
-					<div className="mt-4 space-y-4">
-						{texts.slice(2).map((text, index) => (
-							<div key={`text-${index + 2}`} className="space-y-2">
-								<select
-									value={text.language}
-									onChange={(e) =>
-										handleTextChange(index + 2, "language", e.target.value)
-									}
-									required
-									className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
-								>
-									<option value="" disabled>
-										Select Language
-									</option>
-									{/* Display both default and fetched languages */}
-									{languages.map((language, langIndex) => (
-										<option
-											key={`language-${language.id || langIndex}`}
-											value={language.id}
-										>
-											{language.languageName || language.name}{" "}
-										</option>
-									))}
-								</select>
-								<textarea
-									placeholder="Text"
-									rows="2"
-									value={text.text}
-									onChange={(e) =>
-										handleTextChange(index + 2, "text", e.target.value)
-									}
-									required
-									className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
-								/>
+						<div className="flex justify-between items-center">
+							<h3 className="text-lg font-medium text-gray-800">
+								Page {pageIndex + 1}
+							</h3>
+							<div className="flex space-x-4">
 								<button
 									type="button"
-									onClick={() => removeText(index + 2)}
-									className="text-red-600 hover:underline"
+									onClick={() => toggleCollapse(pageIndex)}
+									className="text-blue-600 hover:underline"
 								>
-									Remove Translation
+									{page.isCollapsed ? "Expand" : "Collapse"}
 								</button>
+								{pages.length > 1 && (
+									<button
+										type="button"
+										onClick={() => removePage(pageIndex)}
+										className="text-red-600 hover:underline"
+									>
+										Remove
+									</button>
+								)}
 							</div>
-						))}
-						<button
-							type="button"
-							onClick={addText}
-							className="text-blue-600 hover:underline mt-2"
-						>
-							Add More Translation
-						</button>
+						</div>
+
+						{!page.isCollapsed && (
+							<>
+								{/* Image */}
+								<div>
+									<label className="block font-medium text-gray-700">
+										Upload Page Image
+									</label>
+									<input
+										type="file"
+										onChange={(e) =>
+											updatePage(pageIndex, "image", e.target.files[0])
+										}
+										accept="image/*"
+										required
+										className="mt-1 block w-full text-sm text-gray-600"
+									/>
+								</div>
+
+								{/* Cover Page Toggle */}
+								<div>
+									<label className="block font-medium text-gray-700">
+										Is this the cover page?
+									</label>
+									<input
+										type="checkbox"
+										checked={page.isCover}
+										onChange={(e) =>
+											updatePage(pageIndex, "isCover", e.target.checked)
+										}
+										className="mt-1"
+									/>
+								</div>
+
+								{/* Translations */}
+								{!page.isCover && (
+									<div>
+										<h4 className="font-medium text-gray-700">Translations</h4>
+
+										{page.translations.map((translation, translationIndex) => (
+											<div
+												key={`page-${pageIndex}-translation-${translationIndex}`}
+												className="space-y-2 mt-2"
+											>
+												<select
+													value={translation.language}
+													onChange={(e) =>
+														updateTranslation(
+															pageIndex,
+															translationIndex,
+															"language",
+															e.target.value
+														)
+													}
+													required
+													className="w-full p-2 border border-gray-300 rounded-md"
+												>
+													<option value="" disabled>
+														Select Language
+													</option>
+													<option value="en">English</option>
+													<option value="ar">Arabic</option>
+												</select>
+												<textarea
+													placeholder="Translation Text"
+													value={translation.text}
+													onChange={(e) =>
+														updateTranslation(
+															pageIndex,
+															translationIndex,
+															"text",
+															e.target.value
+														)
+													}
+													required
+													className="w-full p-2 border border-gray-300 rounded-md"
+												/>
+												{page.translations.length > 2 && (
+													<button
+														type="button"
+														onClick={() =>
+															removeTranslation(pageIndex, translationIndex)
+														}
+														className="text-red-600 hover:underline"
+													>
+														Remove
+													</button>
+												)}
+											</div>
+										))}
+
+										{/* Add More Translations */}
+										<button
+											type="button"
+											onClick={() => addTranslation(pageIndex)}
+											className="text-blue-600 hover:underline mt-2"
+										>
+											Add Translation
+										</button>
+									</div>
+								)}
+							</>
+						)}
 					</div>
-					{/* )} */}
+				))}
+
+				{/* Add Page Button */}
+				<div className="flex justify-center">
+					<button
+						type="button"
+						onClick={addPage}
+						className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+					>
+						Add Page
+					</button>
 				</div>
 
 				{/* Submit Button */}
@@ -292,7 +297,7 @@ export default function ManagePages() {
 						disabled={loading}
 						className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
 					>
-						{loading ? "Adding..." : "Add Book and Page"}
+						{loading ? "Adding..." : "Add Book"}
 					</button>
 				</div>
 			</form>
