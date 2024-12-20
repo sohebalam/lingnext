@@ -4,12 +4,7 @@ import { db } from "@/app/service/firebase/config"; // Import Firebase config
 import { useRouter } from "next/navigation"; // Import the router
 import { collection, getDocs, doc, getDoc } from "firebase/firestore"; // Firestore methods
 import { Navbar } from "@/app/components/Navbar";
-import {
-	PencilIcon,
-	TrashIcon,
-	ChevronDownIcon,
-	ChevronUpIcon,
-} from "@heroicons/react/24/solid";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 export default function DisplayLevelsWithBooks() {
 	const [levels, setLevels] = useState([]);
@@ -53,24 +48,23 @@ export default function DisplayLevelsWithBooks() {
 						// Filter out any null books (in case a book does not exist)
 						const validBooks = books.filter((book) => book !== null);
 
-						// Fetch the page data for each book's pages
+						// Fetch page details for each book's pages
 						for (const book of validBooks) {
 							if (book.pages) {
-								console.log(`Page IDs for Book ${book.id}:`, book.pages); // Log the page IDs directly
+								console.log(`Page Details for Book ${book.id}:`, book.pages); // Log the page details
 
-								// Fetch page details for each page ID in the book
-								const pageDetails = await Promise.all(
-									book.pages.map(async (pageId) => {
-										const pageRef = doc(db, "pages", pageId); // Assuming pages are stored in a "pages" collection
-										const pageSnap = await getDoc(pageRef);
-										return pageSnap.exists()
-											? { id: pageSnap.id, ...pageSnap.data() }
-											: null;
-									})
-								);
+								// Map page objects to their details, considering translations and other properties
+								const pageDetails = book.pages.map((page) => {
+									// Each page might have translations or other attributes
+									return {
+										id: page.id,
+										translations: page.translations || [],
+										isCover: page.isCover || false,
+										isCollapsed: page.isCollapsed || false,
+									};
+								});
 
-								console.log("Page Details for Book:", book.id, pageDetails); // Log the page data
-								book.pages = pageDetails.filter((page) => page !== null); // Filter out null pages
+								book.pages = pageDetails; // Update the pages with detailed objects
 							} else {
 								console.log("No pages in book:", book.id); // Log if no pages exist
 							}
@@ -112,7 +106,7 @@ export default function DisplayLevelsWithBooks() {
 
 	// Navigate to book detail page
 	const handleBookClick = (bookId) => {
-		router.push(`/book/${bookId}`); // Dynamically push to the book's page
+		router.push(`/product/book/${bookId}`); // Dynamically push to the book's page
 	};
 
 	return (
@@ -153,8 +147,32 @@ export default function DisplayLevelsWithBooks() {
 															onClick={() => handleBookClick(book.id)} // Add onClick to navigate
 														>
 															<h4 className="text-lg font-medium text-gray-700">
-																{book.name ?? "No title available"}
+																{book.title ?? "No title available"}
 															</h4>
+															<div>
+																{book.pages.map((page) => (
+																	<div
+																		key={page.id}
+																		className="flex items-center space-x-2"
+																	>
+																		<span>
+																			{page.isCover ? "Cover" : "Page"}:{" "}
+																			{page.id}
+																		</span>
+																		{page.translations?.map(
+																			(translation, idx) => (
+																				<span
+																					key={idx}
+																					className="text-sm text-gray-500"
+																				>
+																					({translation.language}:{" "}
+																					{translation.text})
+																				</span>
+																			)
+																		)}
+																	</div>
+																))}
+															</div>
 														</div>
 													))
 												) : (

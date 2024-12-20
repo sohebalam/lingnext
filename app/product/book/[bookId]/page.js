@@ -1,10 +1,9 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config"; // Firebase config
 import { useParams } from "next/navigation"; // For dynamic routing
 import { doc, getDoc } from "firebase/firestore"; // Firestore methods
-import { Navbar } from "../../components/Navbar";
+import { Navbar } from "@/app/components/Navbar";
 
 export default function BookDetailPage() {
 	const [book, setBook] = useState(null);
@@ -34,16 +33,44 @@ export default function BookDetailPage() {
 				const bookData = bookSnap.data();
 				setBook(bookData);
 
-				// Fetch pages
-				const pageIds = bookData.pages || [];
-				const pageDetails = await Promise.all(
-					pageIds.map(async (pageId) => {
-						const pageRef = doc(db, "pages", pageId);
-						const pageSnap = await getDoc(pageRef);
-						return pageSnap.exists() ? pageSnap.data() : null;
+				// Log book data for debugging
+				console.log("Fetched Book Data:", bookData);
+
+				// Directly get pages array from book data
+				const bookPages = bookData.pages || [];
+				console.log("Book Pages:", bookPages); // Log to check book pages
+
+				// Check if bookPages is an array
+				if (!Array.isArray(bookPages)) {
+					console.error(
+						"Expected an array of pages but got:",
+						typeof bookPages
+					);
+					return;
+				}
+
+				// Validate each page's structure
+				const validPages = bookPages
+					.map((page, index) => {
+						if (typeof page !== "object" || !page.id) {
+							console.error(`Invalid page structure at index ${index}:`, page);
+							return null;
+						}
+
+						return {
+							id: page.id,
+							image: page.image || null,
+							originalText: page.originalText || null,
+							translations: page.translations || [],
+							isCover: page.isCover || false,
+							isCollapsed: page.isCollapsed || false,
+						};
 					})
-				);
-				setPages(pageDetails.filter((page) => page !== null));
+					.filter((page) => page !== null); // Filter out invalid pages
+
+				setPages(validPages);
+			} else {
+				console.log("No book found for the given bookId");
 			}
 		} catch (error) {
 			console.error("Error fetching book details:", error);
