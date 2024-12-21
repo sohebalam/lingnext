@@ -62,6 +62,7 @@ export default function BookDetailPage() {
 	if (loading) {
 		return (
 			<div>
+				<Navbar />
 				<div className="text-center mt-20">Loading...</div>
 			</div>
 		);

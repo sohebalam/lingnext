@@ -12,7 +12,7 @@ const navLinks = [
 	{ name: "Home", href: "/" },
 	{ name: "Dashboard", href: "/product/dashboard" },
 	{ name: "Contact Us", href: "/contact" },
-	{ name: "Pageform", href: "/product/forms/bookform" },
+	{ name: "Bookform", href: "/product/forms/bookform" },
 	{ name: "Forms", href: "/product/forms" },
 	{ name: "Languages", href: "/product/forms/language" },
 ];

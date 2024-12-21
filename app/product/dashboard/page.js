@@ -93,16 +93,6 @@ export default function DisplayLevelsWithBooks() {
 		);
 	};
 
-	// Toggle expanded book
-	const toggleBook = (levelId, bookId) => {
-		setExpandedBooks((prev) => ({
-			...prev,
-			[levelId]: prev[levelId]?.includes(bookId)
-				? prev[levelId].filter((id) => id !== bookId)
-				: [...(prev[levelId] || []), bookId],
-		}));
-	};
-
 	// Navigate to book detail page
 	const handleBookClick = (bookId) => {
 		router.push(`/product/book/${bookId}`); // Dynamically push to the book's page
