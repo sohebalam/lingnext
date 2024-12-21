@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { Navbar } from "@/components/Navbar";
 import Book from "@/models/Book";
+import { ChevronRight } from "@heroicons/react/24/solid";
 
 export default function ManageLevelsBooks() {
 	const [levels, setLevels] = useState([]);
@@ -154,7 +155,6 @@ export default function ManageLevelsBooks() {
 
 	return (
 		<>
-			<Navbar />
 			<div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-md shadow-md space-y-8">
 				{/* Level Form */}
 				<div>

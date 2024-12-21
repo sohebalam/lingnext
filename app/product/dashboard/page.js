@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config"; // Import Firebase config
 import { useRouter } from "next/navigation"; // Import the router
 import { collection, getDocs, doc, getDoc } from "firebase/firestore"; // Firestore methods
-import { Navbar } from "@/components/Navbar";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 export default function DisplayLevelsWithBooks() {
@@ -111,7 +110,6 @@ export default function DisplayLevelsWithBooks() {
 
 	return (
 		<>
-			<Navbar />
 			<div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-md shadow-md space-y-8">
 				<h2 className="text-2xl font-bold text-gray-800 mb-4">
 					Levels with Books

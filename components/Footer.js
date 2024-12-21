@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Logo from "../../public/assets/Logo.png";
-import Facebook from "../../public/assets/Facebook.svg";
-import Twitter from "../../public/assets/X.svg";
-import Feed from "../../public/assets/Feed.svg";
+import Logo from "@/public/assets/Logo.png";
+import Facebook from "@/public/assets/Facebook.svg";
+import Twitter from "@/public/assets/X.svg";
+import Feed from "@/public/assets/Feed.svg";
 
 export function Footer() {
 	return (

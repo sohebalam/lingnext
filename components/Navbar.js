@@ -40,7 +40,9 @@ export function Navbar() {
 	return (
 		<nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-20">
 			<div className="flex items-center">
-				<Image src={Logo} alt="Logo" width={35} height={35} />
+				<Link href={"/"}>
+					<Image src={Logo} alt="Logo" width={35} height={35} />
+				</Link>
 
 				<div className="hidden lg:flex pl-[74px] gap-x-[56px]">
 					{navLinks.map((item, index) => (
