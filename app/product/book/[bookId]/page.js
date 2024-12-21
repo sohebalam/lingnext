@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config"; // Firebase config
 import { useParams } from "next/navigation"; // For dynamic routing
 import { doc, getDoc } from "firebase/firestore"; // Firestore methods
-import { Navbar } from "@/app/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 
 export default function BookDetailPage() {
 	const [book, setBook] = useState(null);
@@ -134,10 +134,6 @@ export default function BookDetailPage() {
 							<p className="text-lg mt-2 text-blue-500">
 								{page.translations[0].text || "No translation available."}
 							</p>
-						</div>
-					)}
-					{page.translations && page.translations.length > 0 && (
-						<div>
 							<p className="text-lg mt-2 text-blue-500">
 								{page.translations[1].text || "No translation available."}
 							</p>

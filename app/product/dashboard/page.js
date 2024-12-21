@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config"; // Import Firebase config
 import { useRouter } from "next/navigation"; // Import the router
 import { collection, getDocs, doc, getDoc } from "firebase/firestore"; // Firestore methods
-import { Navbar } from "@/app/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 export default function DisplayLevelsWithBooks() {

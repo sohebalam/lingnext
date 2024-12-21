@@ -10,8 +10,8 @@ import {
 	updateDoc,
 	arrayUnion,
 } from "firebase/firestore";
-import { Navbar } from "@/app/components/Navbar";
-import Book from "@/app/models/Book";
+import { Navbar } from "@/components/Navbar";
+import Book from "@/models/Book";
 
 export default function ManageLevelsBooks() {
 	const [levels, setLevels] = useState([]);

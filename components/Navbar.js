@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import Logo from "../../public/assets/Logo.png";
-import User from "../../public/assets/User.svg";
-import Menu from "../../public/assets/Menu.svg";
+import Logo from "@/public/assets/Logo.png";
+import User from "@/public/assets/User.svg";
+import Menu from "@/public/assets/Menu.svg";
 import { useAuth } from "@/app/service/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link"; // Import Link from Next.js

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { db } from "@/app/service/firebase/config"; // Firebase config import
 import { collection, addDoc } from "firebase/firestore"; // Firestore methods
-import Language from "@/app/models/Languages"; // Import Language model
+import Language from "@/models/Languages"; // Import Language model
 
 const AddLanguageForm = () => {
 	const [languageName, setLanguageName] = useState("");

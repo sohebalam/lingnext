@@ -16,7 +16,7 @@ import {
 	ChevronDownIcon,
 	ChevronUpIcon,
 } from "@heroicons/react/24/solid"; // Heroicons for edit, delete, chevrons
-import { Navbar } from "../../components/Navbar";
+import { Navbar } from "../../../components/Navbar";
 
 export default function DisplayLevelsWithBooks() {
 	const [levels, setLevels] = useState([]);
