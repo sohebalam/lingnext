@@ -1,60 +1,21 @@
-// "use client";
-// import { useState, useEffect } from "react";
-// import { db } from "@/app/service/firebase/config"; // Firebase config
-// import { useParams } from "next/navigation"; // For dynamic routing
-// import { doc, getDoc } from "firebase/firestore"; // Firestore methods
-
-// export default function bookDetailPage() {
-// 	const [loading, setLoading] = useState(true);
-// 	const [book, setbook] = useState(true);
-
-// 	// Use useParams to get dynamic route parameters
-// 	const params = useParams();
-// 	const bookId = params.bookId; // Extract bookId from URL parameters
-
-// 	console.log(bookId);
-// 	console.log(book.name);
-
-// 	useEffect(() => {
-// 		if (bookId) {
-// 			fetchbookDetails();
-// 		}
-// 	}, [bookId]); // Re-run when bookId changes
-
-// 	// Fetch book details and pages from Firestore
-// 	const fetchbookDetails = async () => {
-// 		try {
-// 			setLoading(true);
-
-// 			// Fetch book data
-// 			const bookRef = doc(db, "books", bookId);
-// 			const bookSnap = await getDoc(bookRef);
-
-// 			if (bookSnap.exists()) {
-// 				const bookData = bookSnap.data();
-// 				setbook(bookData);
-// 			} else {
-// 				console.log("No book found for the given bookId");
-// 			}
-// 		} catch (error) {
-// 			console.error("Error fetching book details:", error);
-// 		} finally {
-// 			setLoading(false);
-// 		}
-// 	};
-
-// 	return (
-// 		<div>
-// 			<h1>{bookId}</h1>
-// 		</div>
-// 	);
-// }
 "use client";
-
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { db } from "@/app/service/firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+	DndContext,
+	closestCenter,
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import {
+	arrayMove,
+	SortableContext,
+	verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 export default function EditBook() {
 	const { bookId } = useParams(); // Using the `useParams` hook
@@ -125,6 +86,29 @@ export default function EditBook() {
 		}
 	};
 
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor)
+	);
+
+	const handleDragEnd = (event) => {
+		const { active, over } = event;
+		if (!over) return;
+
+		if (active.id !== over.id) {
+			const oldIndex = formData.pages.findIndex(
+				(page) => page.id === active.id
+			);
+			const newIndex = formData.pages.findIndex((page) => page.id === over.id);
+
+			const reorderedPages = arrayMove(formData.pages, oldIndex, newIndex);
+			setFormData((prev) => ({
+				...prev,
+				pages: reorderedPages,
+			}));
+		}
+	};
+
 	if (loading) return <p>Loading...</p>;
 
 	return (
@@ -144,18 +128,22 @@ export default function EditBook() {
 				</div>
 				<div>
 					<label className="block text-gray-700 font-medium">Pages</label>
-					<textarea
-						name="pages"
-						value={JSON.stringify(formData.pages, null, 2)}
-						onChange={(e) =>
-							setFormData((prev) => ({
-								...prev,
-								pages: JSON.parse(e.target.value || "[]"),
-							}))
-						}
-						rows="6"
-						className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
-					></textarea>
+					<DndContext
+						sensors={sensors}
+						collisionDetection={closestCenter}
+						onDragEnd={handleDragEnd}
+					>
+						<SortableContext
+							items={formData.pages.map((page) => page.id)}
+							strategy={verticalListSortingStrategy}
+						>
+							<div className="space-y-2">
+								{formData.pages.map((page) => (
+									<SortableItem key={page.id} id={page.id} />
+								))}
+							</div>
+						</SortableContext>
+					</DndContext>
 				</div>
 				<button
 					type="submit"
@@ -165,6 +153,32 @@ export default function EditBook() {
 					{loading ? "Updating..." : "Update Book"}
 				</button>
 			</form>
+		</div>
+	);
+}
+
+// SortableItem.js
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+export function SortableItem({ id }) {
+	const { attributes, listeners, setNodeRef, transform, transition } =
+		useSortable({ id });
+
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+	};
+
+	return (
+		<div
+			ref={setNodeRef}
+			style={style}
+			{...attributes}
+			{...listeners}
+			className="p-4 bg-white border border-gray-300 rounded-md shadow-sm"
+		>
+			<p className="text-gray-700 text-sm">Page ID: {id}</p>
 		</div>
 	);
 }
