@@ -96,16 +96,31 @@ export default function DisplayLevelsWithBooks() {
 		fetchLevels();
 	}, []);
 
-	// Handle edit navigation
-	const handleEdit = (type, id) => {
+	const handleEdit = (type, id, bookId = null) => {
 		if (type === "level") {
 			router.push(`/product/update/level/${id}`);
 		} else if (type === "book") {
-			router.push(`/product/update/book/${id}`);
+			router.push(`/product/update/book/${id}`); // Edit book action
 		} else if (type === "page") {
-			router.push(`/product/update/page/${id}`); // Edit page action
+			if (bookId) {
+				// Sending both pageId and bookId for page editing
+				router.push(`/product/update/page/${id}/${bookId}`);
+			} else {
+				router.push(`/product/update/page/${id}`); // Just page editing without bookId
+			}
 		}
 	};
+
+	// // Handle edit navigation
+	// const handleEdit = (type, id) => {
+	// 	if (type === "level") {
+	// 		router.push(`/product/update/level/${id}`);
+	// 	} else if (type === "book") {
+	// 		router.push(`/product/update/book/${id}`);
+	// 	} else if (type === "page") {
+	// 		router.push(`/product/update/page/${id}`); // Edit page action
+	// 	}
+	// };
 
 	// Handle book deletion
 	const deleteBook = async (levelId, bookId) => {
@@ -265,8 +280,8 @@ export default function DisplayLevelsWithBooks() {
 																			<div className="flex space-x-4">
 																				<button
 																					onClick={() =>
-																						handleEdit("page", page.id)
-																					} // Edit button for page
+																						handleEdit("page", page.id, book.id)
+																					} // Pass bookId along with pageId
 																					className="text-blue-600 hover:text-blue-800 text-sm flex items-center space-x-2"
 																				>
 																					<PencilIcon className="w-5 h-5" />
