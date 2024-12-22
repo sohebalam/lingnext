@@ -1,54 +1,76 @@
+"use client";
+
 import Image from "next/image";
-import BlurArrow from "@/public/assets/blue-button.svg";
-import Gradient from "@/public/assets/Gradient.svg";
-import HeroImage from "@/public/assets/Image.png";
-import Google from "@/public/assets/Google.svg";
-import Slack from "@/public/assets/Slack.svg";
-import Truspilot from "@/public/assets/Trustpilot.svg";
-import Cnn from "@/public/assets/CNN.svg";
-import Cluth from "@/public/assets/Clutch.svg";
+import { Button, Typography } from "@material-tailwind/react";
 
-export function Hero() {
+function Hero() {
 	return (
-		<div className="pt-4 lg:pt-10">
-			<div className="px-[20px] lg:px-[280px]">
-				<h1 className="text-center text-[32px] leading-[40px] font-medium text-[#172026] lg:text-[64px] lg:leading-[72px]">
-					Start learning languages through stories
-				</h1>
-				<p className="text-center pt-6 text-[#36485C] lg:text-[18px] lg:leading-7">
-					Explore language learning through captivating picture books. Engage,
-					inspire, and make progress effortlessly with Lingo Stories!
-				</p>
+		<div className="mb-[2rem]">
+			<header className="grid !min-h-[49rem] bg-gray-900 px-8">
+				<div className="container mx-auto mt-32 grid h-full w-full grid-cols-1 place-items-center lg:mt-14 lg:grid-cols-2">
+					<div className="col-span-1">
+						<h1 class="text-white mb-4 text-5xl font-bold">
+							Your Perfect <br /> Learning App
+						</h1>
+						<p class="text-white mb-7 md:pr-16 xl:pr-28">
+							Our app is here to empower you on your quest for knowledge,
+							anytime and anywhere.
+						</p>
 
-				<div className="flex w-full pt-8 justify-center gap-x-6 ">
-					{/* Change button Color */}
-					<button className="bg-[#4328EB] w-1/2 py-4 px-8 text-white rounded-[4px] lg:w-fit">
-						Try for free
-					</button>
-					<button className="w-1/2 text-[#4328EB] flex items-center justify-center gap-x-2 lg:w-fit">
-						View Pricing
-						<span>
-							<Image src={BlurArrow} alt="Learn more" />
-						</span>
-					</button>
-				</div>
-			</div>
-
-			<div className="relative flex h-full w-full justify-center">
-				<Image
-					src={Gradient}
-					alt="Gradient"
-					className="min-h-[500px] w-full object-cover lg:h-auto"
-				/>
-
-				<div className="absolute bottom-5 flex w-full flex-col items-center">
+						<h2 class="text-white mb-4 text-xl font-semibold">Get the app</h2>
+						<div className="flex flex-col gap-2 md:mb-2 md:w-10/12 md:flex-row">
+							{/* <Button
+								size="lg"
+								color="white"
+								className="flex justify-center items-center gap-3"
+							>
+								<Image
+									width={256}
+									height={256}
+									src="/assets/logo-apple.png"
+									alt="metamask"
+									className="w-6 h-6"
+								/>
+								App Store
+							</Button> */}
+							<Button
+								size="lg"
+								color="white"
+								className="flex justify-center items-center gap-3 p-3"
+							>
+								<Image
+									width={256}
+									height={256}
+									src="/assets/logo-google.png"
+									alt="metamask"
+									className="w-6 h-6"
+								/>
+								Google Play
+							</Button>
+						</div>
+					</div>
 					<Image
-						src={HeroImage}
-						alt="hero image"
-						className="-ml-4 h-[310px] sm:-mb-20 sm:h-[350px] sm:w-[650px] lg:h-auto xl:w-[70%] lg:-translate-y-56 sm:-translate-y-36"
+						width={470}
+						height={576}
+						src="/assets/iphones.png"
+						alt="team work"
+						className="col-span-1 my-20 h-full max-h-[30rem] -translate-y-32 md:max-h-[36rem] lg:my-0 lg:ml-auto lg:max-h-[40rem] lg:translate-y-0"
 					/>
+				</div>
+			</header>
+			<div className="mx-8 lg:mx-16 -mt-24 rounded-xl bg-white p-5 md:p-14 shadow-md">
+				<div>
+					<Typography variant="h3" color="blue-gray" className="mb-3">
+						Learning App
+					</Typography>
+					<p class="font-normal text-gray-500 lg:w-5/12">
+						Download our app to dive into a vast library of courses, tutorials,
+						and study materials on a wide range of subjects - from programming
+						and language learning to personal development and beyond
+					</p>
 				</div>
 			</div>
 		</div>
 	);
 }
+export default Hero;
