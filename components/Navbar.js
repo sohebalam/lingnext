@@ -124,6 +124,39 @@ export function Navbar() {
 						)}
 					</div>
 
+					{/* Mobile Navigation */}
+					<div className="flex gap-x-8 items-center lg:ml-12">
+						<p className="hidden lg:block font-medium text-[#36485C] text-sm lg:text-base pr-[32px]">
+							Open an Account
+						</p>
+
+						{/* User Profile Section */}
+						{user ? (
+							<div className="relative flex items-center gap-x-4">
+								<Image src={User} alt="User Profile" width={20} height={20} />
+								<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
+									{user.name}
+								</span>
+								<button
+									className="font-medium text-[#36485C] text-sm lg:text-base lg:block"
+									onClick={handleLogOutClick}
+								>
+									Logout
+								</button>
+							</div>
+						) : (
+							<div
+								className="flex items-center gap-x-4 cursor-pointer"
+								onClick={handleSignInClick}
+							>
+								<Image src={User} alt="User Profile" width={20} height={20} />
+								<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
+									Sign in
+								</span>
+							</div>
+						)}
+					</div>
+
 					<label htmlFor="check" className="open-menu">
 						Menu
 					</label>
