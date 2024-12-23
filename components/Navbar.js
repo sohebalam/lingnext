@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Logo from "@/public/assets/Logo.svg";
+import Logo from "@/public/assets/Logo.png";
 import User from "@/public/assets/User.svg";
 import Menu from "@/public/assets/Menu.svg";
-
+import Link from "next/link";
+import { useAuth } from "@/app/service/AuthContext";
 const navLinks = [
 	{ name: "Features" },
 	{ name: "Pricing" },
@@ -16,6 +17,16 @@ export function Navbar() {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+	const { user, logOut } = useAuth();
+
+	const handleSignInClick = () => {
+		router.push("/auth/login");
+	};
+
+	const handleLogOutClick = () => {
+		logOut();
+		router.push("/");
+	};
 	// Toggle dropdown visibility
 	const toggleDropdown = () => {
 		setIsDropdownOpen(!isDropdownOpen); // Toggle the dropdown state
@@ -48,12 +59,12 @@ export function Navbar() {
 	}, []);
 
 	return (
-		<nav className="bg-sky-600 text-white">
+		<nav className="bg-white fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
 			<div className="container mx-auto px-4 md:flex items-center gap-6">
 				<div className="flex items-center justify-between md:w-auto w-full">
-					<a href="#" className="py-5 px-2 text-white flex-1 font-bold">
-						Webcrunch.com
-					</a>
+					<Link href={"/"}>
+						<Image src={Logo} alt="Logo" width={30} height={30} />
+					</Link>
 
 					{/* mobile menu icon */}
 					<div className="md:hidden flex items-center">
@@ -86,21 +97,21 @@ export function Navbar() {
 						isMobileMenuOpen ? "block" : "hidden"
 					}`}
 				>
-					<a href="#" className="py-2 px-3 block">
+					<a href="/" className="py-2 px-3 block">
 						Home
 					</a>
-					<a href="#" className="py-2 px-3 block">
-						About
+					<a href="/contact" className="py-2 px-3 block">
+						Contact Us
 					</a>
 
 					{/* Dropdown menu */}
 					<div className="relative">
 						<button
 							type="button"
-							className="dropdown-toggle py-2 px-3 hover:bg-sky-800 flex items-center gap-2 rounded"
+							className="dropdown-toggle py-2 px-3 hover:bg-white flex items-center gap-2 rounded"
 							onClick={toggleDropdown}
 						>
-							<span className="pointer-events-none select-none">Services</span>
+							<span className="pointer-events-none select-none">Forms</span>
 							<svg
 								className="w-3 h-3 pointer-events-none"
 								xmlns="http://www.w3.org/2000/svg"
@@ -119,23 +130,103 @@ export function Navbar() {
 
 						{/* Dropdown visibility based on state */}
 						{isDropdownOpen && (
-							<div className="dropdown-menu absolute bg-sky-700 text-white rounded-b-lg pb-2 w-48 z-50">
-								<a href="#" className="block px-6 py-2 hover:bg-sky-800">
-									Web Design
+							<div className="dropdown-menu absolute white text-black rounded-b-lg pb-2 w-48 z-50">
+								<a
+									href="/product/forms"
+									className="block px-6 py-2 hover:bg-white"
+								>
+									Level Form
 								</a>
-								<a href="#" className="block px-6 py-2 hover:bg-sky-800">
-									Web Development
+								<a
+									href="/product/forms/bookform"
+									className="block px-6 py-2 hover:bg-white"
+								>
+									Book Form
 								</a>
-								<a href="#" className="block px-6 py-2 hover:bg-sky-800">
-									SEO
+								<a
+									href="/product/forms/language"
+									className="block px-6 py-2 hover:bg-white"
+								>
+									Language Form
+								</a>
+							</div>
+						)}
+					</div>
+					{/* Dropdown menu */}
+					<div className="relative">
+						<button
+							type="button"
+							className="dropdown-toggle py-2 px-3 hover:bg-white flex items-center gap-2 rounded"
+							onClick={toggleDropdown}
+						>
+							<span className="pointer-events-none select-none">Dashboard</span>
+							<svg
+								className="w-3 h-3 pointer-events-none"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth="1.5"
+								stroke="currentColor"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="m19.5 8.25-7.5 7.5-7.5-7.5"
+								/>
+							</svg>
+						</button>
+
+						{/* Dropdown visibility based on state */}
+						{isDropdownOpen && (
+							<div className="dropdown-menu absolute white text-black rounded-b-lg pb-2 w-48 z-50">
+								<a
+									href="/product/dashboard"
+									className="block px-6 py-2 hover:bg-white"
+								>
+									Main Dashboard
+								</a>
+								<a
+									href="/product/dashboard/admin"
+									className="block px-6 py-2 hover:bg-white"
+								>
+									Admin Dashboard
 								</a>
 							</div>
 						)}
 					</div>
 
-					<a href="#" className="py-2 px-3 block">
-						Contact
-					</a>
+					{/* Mobile Navigation */}
+					<div className="flex gap-x-8 items-center lg:ml-12">
+						<p className="hidden lg:block font-medium text-[#36485C] text-sm lg:text-base pr-[32px]">
+							Open an Account
+						</p>
+
+						{/* User Profile Section */}
+						{user ? (
+							<div className="relative flex items-center gap-x-4">
+								<Image src={User} alt="User Profile" width={20} height={20} />
+								<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
+									{user.name}
+								</span>
+								<button
+									className="font-medium text-[#36485C] text-sm lg:text-base lg:block"
+									onClick={handleLogOutClick}
+								>
+									Logout
+								</button>
+							</div>
+						) : (
+							<div
+								className="flex items-center gap-x-4 cursor-pointer"
+								onClick={handleSignInClick}
+							>
+								<Image src={User} alt="User Profile" width={20} height={20} />
+								<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
+									Sign in
+								</span>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</nav>
