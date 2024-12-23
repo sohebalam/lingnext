@@ -8,8 +8,15 @@ import Testimonials from "@/components/Testimonials";
 const HomePage = () => {
 	const router = useRouter();
 
+	const navbarHeight = 80;
+
 	return (
-		<div>
+		<div
+			style={{
+				// paddingTop: `${navbarHeight + 1}rem`, // Add a bit of extra padding to make sure the content is spaced out properly
+				position: "relative",
+			}}
+		>
 			<Hero />
 			<LatestBooks />
 			<Testimonials />

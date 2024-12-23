@@ -16,13 +16,14 @@ export const metadata = {
 	title: "Lingo Tales",
 	description: "Learn languages through stories",
 };
-
 export default function RootLayout({ children }) {
+	const navbarHeight = 80;
 	return (
 		<html lang="en">
 			<AuthProvider>
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+					style={{ paddingTop: `${navbarHeight}px` }}
 				>
 					<Navbar />
 					{children}
