@@ -60,7 +60,9 @@ export function Navbar() {
 
 	return (
 		<nav className="bg-white fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
-			<div className="container mx-auto px-4 md:flex items-center gap-6">
+			<div className="container mx-auto px-4 md:flex items-center gap-6 py-4">
+				{" "}
+				{/* Increased vertical padding here */}
 				<div className="flex items-center justify-between md:w-auto w-full">
 					<Link href={"/"}>
 						<Image src={Logo} alt="Logo" width={30} height={30} />
@@ -90,7 +92,6 @@ export function Navbar() {
 						</button>
 					</div>
 				</div>
-
 				{/* Mobile menu links */}
 				<div
 					className={`md:flex md:flex-row flex-col items-center justify-start md:space-x-1 pb-3 md:pb-0 navigation-menu ${
