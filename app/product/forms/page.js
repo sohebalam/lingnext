@@ -10,7 +10,7 @@ import {
 	updateDoc,
 	arrayUnion,
 } from "firebase/firestore";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar2";
 import Book from "@/models/Book";
 import { ChevronRight } from "@heroicons/react/24/solid";
 
