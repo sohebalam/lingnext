@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import User from "@/public/assets/User.svg";
+import Menu from "@/public/assets/Menu.svg";
 
 const navLinks = [
 	{ name: "Home", href: "/" },
@@ -71,7 +72,7 @@ export function Navbar() {
 
 					{/* Dropdowns */}
 					{/* Dashboard Dropdown */}
-					<div className="relative">
+					<div className="relative lg:ml-12">
 						<p
 							className="text-[#36485C] font-medium cursor-pointer text-sm lg:text-base"
 							onClick={toggleDashboardDropdown}
@@ -81,12 +82,12 @@ export function Navbar() {
 						{dashboardDropdown && (
 							<div className="absolute top-full mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
 								<Link href="/product/dashboard">
-									<p className="px-4 py-2 text-sm text-black hover:bg-gray-100">
+									<p className="px-4 py-2 text-sm text-[#36485C] hover:bg-gray-100">
 										Main Dashboard
 									</p>
 								</Link>
 								<Link href="/product/dashboard/admin">
-									<p className="px-4 py-2 text-sm text-black hover:bg-gray-100">
+									<p className="px-4 py-2 text-sm text-[#36485C] hover:bg-gray-100">
 										Admin Panel
 									</p>
 								</Link>
@@ -95,7 +96,7 @@ export function Navbar() {
 					</div>
 
 					{/* Forms Dropdown */}
-					<div className="relative">
+					<div className="relative lg:ml-12">
 						<p
 							className="text-[#36485C] font-medium cursor-pointer text-sm lg:text-base"
 							onClick={toggleFormDropdown}
@@ -105,17 +106,17 @@ export function Navbar() {
 						{formDropdown && (
 							<div className="absolute top-full mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
 								<Link href="/product/forms">
-									<p className="px-4 py-2 text-sm text-black hover:bg-gray-100">
+									<p className="px-4 py-2 text-sm text-[#36485C] hover:bg-gray-100">
 										Level Form
 									</p>
 								</Link>
 								<Link href="/product/forms/bookform">
-									<p className="px-4 py-2 text-sm text-black hover:bg-gray-100">
+									<p className="px-4 py-2 text-sm text-[#36485C] hover:bg-gray-100">
 										Book Form
 									</p>
 								</Link>
 								<Link href="/product/forms/language">
-									<p className="px-4 py-2 text-sm text-black hover:bg-gray-100">
+									<p className="px-4 py-2 text-sm text-[#36485C] hover:bg-gray-100">
 										Language Form
 									</p>
 								</Link>
