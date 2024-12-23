@@ -1,30 +1,29 @@
 "use client";
 
 import React from "react";
-import { Typography, Card, CardBody, Avatar } from "@material-tailwind/react";
-import { UserIcon } from "@heroicons/react/24/solid";
+import { Typography } from "@material-tailwind/react";
 import TestimonialCard from "@/components/TestimonialCard";
 
 const TESTIMONIALS = [
 	{
 		feedback:
-			"It has been a game-changer for my business. Their dedication, expertise, and attention to detail have truly set them apart. I highly recommend their services!",
+			"Lingo Stories has been a transformative experience for my language learning. The engaging storybooks make picking up a new language feel natural and fun!",
 		client: "Jessica Devis",
-		title: "CEO @ MARKETING DIGITAL LTD.",
+		title: "Language Enthusiast",
 		img: "/assets/avatar1.jpg",
 	},
 	{
 		feedback:
-			"It understood my unique needs and delivered a tailored solution promptly. Their customer support is top-notch, and I appreciate their commitment.",
+			"As someone who struggled with traditional methods, Lingo Stories gave me a fresh and exciting way to learn. It's like revisiting my childhood but in a whole new language!",
 		client: "Mary Joshiash",
-		title: "MARKETING @ APPLE INC.",
+		title: "Multilingual Explorer",
 		img: "/assets/avatar2.jpg",
 	},
 	{
 		feedback:
-			"They not only met but exceeded our expectations. Their innovative approach and technical proficiency have been instrumental in our success.",
+			"My kids love the interactive picture books, and I'm amazed at how much they've learned in such a short time. A must-have for families exploring new languages!",
 		client: "Marcell Glock",
-		title: "CFO @ APPLE INC..",
+		title: "Parent & Educator",
 		img: "/assets/avatar3.jpg",
 	},
 ];
@@ -35,15 +34,15 @@ export function Testimonials() {
 			<div className="container mx-auto">
 				<div className="mb-5 flex w-full flex-col items-center">
 					<Typography variant="h2" color="blue-gray" className="mb-2">
-						What Clients Say
+						What Our Users Say
 					</Typography>
 					<Typography
 						variant="lead"
 						className="mb-10 max-w-3xl text-center !text-gray-600"
 					>
-						Discover what our valued clients have to say about their experiences
-						with our services. We take pride in delivering exceptional results
-						and fostering lasting partnerships.
+						"Discover how Lingo Stories is transforming language learning for
+						our users. From engaging storybooks to an immersive experience, hear
+						how we make learning languages fun and effective for all ages!"
 					</Typography>
 				</div>
 				<div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-3 lg:px-20">

@@ -12,7 +12,7 @@ function Hero() {
 						<h1 class="text-white mb-4 text-5xl font-bold">
 							Your Perfect <br /> Learning App
 						</h1>
-						<p class="text-white mb-7 md:pr-16 xl:pr-28">
+						<p className="text-white mb-7 md:pr-16 xl:pr-28">
 							Our app is here to empower you on your quest for knowledge,
 							anytime and anywhere.
 						</p>
@@ -36,14 +36,14 @@ function Hero() {
 							<Button
 								size="lg"
 								color="white"
-								className="flex justify-center items-center gap-3 p-3"
+								className="flex justify-center items-center gap-3 p-3 pr-5"
 							>
 								<Image
 									width={256}
 									height={256}
-									src="/assets/logo-google.png"
+									src="/assets/Google-Play-icon-logo.png"
 									alt="metamask"
-									className="w-6 h-6"
+									className="w-9 h-6"
 								/>
 								Google Play
 							</Button>
@@ -52,9 +52,9 @@ function Hero() {
 					<Image
 						width={470}
 						height={576}
-						src="/assets/iphones.png"
+						src="/assets/mobile2.png"
 						alt="team work"
-						className="col-span-1 my-20 h-full max-h-[30rem] -translate-y-32 md:max-h-[36rem] lg:my-0 lg:ml-auto lg:max-h-[40rem] lg:translate-y-0"
+						className="col-span-1 my-20 h-full max-h-[28rem] -translate-y-32 md:max-h-[28rem] lg:my-0 lg:ml-auto lg:max-h-[35rem] lg:translate-y-0"
 					/>
 				</div>
 			</header>
@@ -64,9 +64,10 @@ function Hero() {
 						Learning App
 					</Typography>
 					<p class="font-normal text-gray-500 lg:w-5/12">
-						Download our app to dive into a vast library of courses, tutorials,
-						and study materials on a wide range of subjects - from programming
-						and language learning to personal development and beyond
+						"Download our app to explore a delightful library of picture books
+						and stories designed to make language learning fun and
+						natural—perfect for learners of all ages and levels! Start your
+						journey today and unlock the joy of learning through storytelling."
 					</p>
 				</div>
 			</div>

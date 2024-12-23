@@ -5,16 +5,16 @@ const testimonials = [
 	{
 		id: 1,
 		image: "assets/bookcovers/animals.png",
-		quote: "Download",
+		quote: "Download Free Now",
 		name: "Level",
 		position: "A1",
-		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
+		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(3).pdf?t=2024-12-23T17%3A15%3A51.638Z",
 	},
 	{
 		id: 2,
 		image:
 			"https://plus.unsplash.com/premium_photo-1664540415069-bc45ce3e711e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmVzc2lvbmFsJTIwbWFufGVufDB8fDB8fHww",
-		quote: "Download",
+		quote: "Download Free Now",
 		name: "Level",
 		position: "A1",
 		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
@@ -23,7 +23,7 @@ const testimonials = [
 		id: 3,
 		image:
 			"https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2Zlc3Npb25hbCUyMHdvbWFufGVufDB8fDB8fHww",
-		quote: "Download",
+		quote: "Download Free Now",
 		name: "Level",
 		position: "A1",
 		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
@@ -32,7 +32,7 @@ const testimonials = [
 		id: 4,
 		image:
 			"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHByb2Zlc3Npb25hbCUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
-		quote: "Download",
+		quote: "Download Free Now",
 		name: "Level",
 		position: "A1",
 		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
@@ -41,7 +41,7 @@ const testimonials = [
 		id: 5,
 		image:
 			"https://images.unsplash.com/photo-1573496358961-3c82861ab8f4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHByb2Zlc3Npb25hbCUyMHdvbWFufGVufDB8fDB8fHww",
-		quote: "Download",
+		quote: "Download Free Now",
 		name: "Level",
 		position: "A1",
 		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
@@ -50,7 +50,7 @@ const testimonials = [
 		id: 6,
 		image:
 			"https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=600",
-		quote: "Download",
+		quote: "Download Free Now",
 		name: "Level",
 		position: "A1",
 		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
