@@ -9,7 +9,7 @@ function Hero() {
 			<header className="grid !min-h-[49rem] bg-gray-900 px-8">
 				<div className="container mx-auto mt-32 grid h-full w-full grid-cols-1 place-items-center lg:mt-14 lg:grid-cols-2">
 					<div className="col-span-1">
-						<h1 class="text-white mb-4 text-5xl font-bold">
+						<h1 className="text-white mb-4 text-5xl font-bold">
 							Your Perfect <br /> Learning App
 						</h1>
 						<p className="text-white mb-7 md:pr-16 xl:pr-28">
@@ -17,7 +17,9 @@ function Hero() {
 							anytime and anywhere.
 						</p>
 
-						<h2 class="text-white mb-4 text-xl font-semibold">Get the app</h2>
+						<h2 className="text-white mb-4 text-xl font-semibold">
+							Get the app
+						</h2>
 						<div className="flex flex-col gap-2 md:mb-2 md:w-10/12 md:flex-row">
 							{/* <Button
 								size="lg"
@@ -63,7 +65,7 @@ function Hero() {
 					<Typography variant="h3" color="blue-gray" className="mb-3">
 						Learning App
 					</Typography>
-					<p class="font-normal text-gray-500 lg:w-5/12">
+					<p className="font-normal text-gray-500 lg:w-5/12">
 						"Download our app to explore a delightful library of picture books
 						and stories designed to make language learning fun and
 						natural—perfect for learners of all ages and levels! Start your

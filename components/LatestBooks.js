@@ -108,14 +108,14 @@ const LatestBooks = () => {
 			<div className="flex items-center justify-center space-x-4">
 				<button
 					onClick={prevSlide}
-					className="flex items-center justify-center px-6 py-3 rounded-full bg-white shadow-lg text-blue-500 font-bold hover:bg-gray-200 transition"
+					className="flex items-center justify-center px-6 py-3 rounded-full bg-white shadow-lg text-gray-700 font-bold hover:bg-gray-200 transition"
 				>
 					<FiArrowLeft size={24} className="mr-2" />
 					Prev
 				</button>
 				<button
 					onClick={nextSlide}
-					className="flex items-center justify-center px-6 py-3 rounded-full bg-white shadow-lg text-green-500 font-bold hover:bg-gray-200 transition"
+					className="flex items-center justify-center px-6 py-3 rounded-full bg-white shadow-lg text-gray-700 font-bold hover:bg-gray-200 transition"
 				>
 					Next
 					<FiArrowRight size={24} className="ml-2" />

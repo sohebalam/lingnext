@@ -45,28 +45,29 @@ export function Navbar() {
 	};
 
 	return (
-		<nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-20">
+		<nav className="flex w-full items-center justify-between px-[16px] py-[12px] lg:container lg:mx-auto lg:px-20">
 			<div className="flex items-center">
 				<Link href={"/"}>
-					<Image src={Logo} alt="Logo" width={35} height={35} />
+					<Image src={Logo} alt="Logo" width={30} height={30} />
 				</Link>
 
-				<div className="hidden lg:flex pl-[74px] gap-x-[56px]">
+				<div className="hidden lg:flex pl-[50px] gap-x-[32px]">
 					{navLinks.map((item, index) => (
 						<Link key={index} href={item.href}>
-							<p className="text-[#36485C] font-medium">{item.name}</p>
+							<p className="text-[#36485C] font-medium text-sm lg:text-base">
+								{item.name}
+							</p>
 						</Link>
 					))}
 
 					{/* Dashboard Dropdown */}
 					<div className="relative">
 						<p
-							className="text-[#36485C] font-medium cursor-pointer"
+							className="text-[#36485C] font-medium cursor-pointer text-sm lg:text-base"
 							onClick={toggleDashboardDropdown}
 						>
 							Dashboard
 						</p>
-
 						{dashboardDropdown && (
 							<div className="absolute top-full mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
 								<Link href="/product/dashboard">
@@ -82,15 +83,15 @@ export function Navbar() {
 							</div>
 						)}
 					</div>
+
 					{/* Forms Dropdown */}
 					<div className="relative">
 						<p
-							className="text-[#36485C] font-medium cursor-pointer"
+							className="text-[#36485C] font-medium cursor-pointer text-sm lg:text-base"
 							onClick={toggleFormDropdown}
 						>
 							Forms
 						</p>
-
 						{formDropdown && (
 							<div className="absolute top-full mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
 								<Link href="/product/forms">
@@ -114,20 +115,19 @@ export function Navbar() {
 				</div>
 			</div>
 
-			<div className="flex gap-x-5 items-center">
-				<p className="hidden lg:block font-medium text-[#36485C] pr-[56px]">
+			<div className="flex gap-x-4 items-center">
+				<p className="hidden md:hidden sm:hidden lg:block font-medium text-[#36485C] text-sm lg:text-base pr-[32px]">
 					Open an Account
 				</p>
-
 				{user ? (
 					<div className="relative">
 						<div className="flex items-center gap-x-2 cursor-pointer">
-							<Image src={User} alt="User Profile" />
-							<span className="hidden font-medium text-[#36485C] lg:block">
+							<Image src={User} alt="User Profile" width={20} height={20} />
+							<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
 								{user.name}
 							</span>
 							<button
-								className="font-medium text-[#36485C] lg:block"
+								className="font-medium text-[#36485C] text-sm lg:text-base lg:block"
 								onClick={handleLogOutClick}
 							>
 								Logout
@@ -139,8 +139,8 @@ export function Navbar() {
 						className="flex items-center gap-x-2 cursor-pointer"
 						onClick={handleSignInClick}
 					>
-						<Image src={User} alt="User Profile" />
-						<span className="hidden font-medium text-[#36485C] lg:block">
+						<Image src={User} alt="User Profile" width={20} height={20} />
+						<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
 							Sign in
 						</span>
 					</div>
