@@ -4,53 +4,56 @@ import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 const testimonials = [
 	{
 		id: 1,
-		image:
-			"https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
-		quote: "This product changed my life! Highly recommend trying it out.",
-		name: "Jane Doe",
-		position: "Creative Director",
+		image: "assets/bookcovers/animals.png",
+		quote: "Download",
+		name: "Level",
+		position: "A1",
+		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
 	},
 	{
 		id: 2,
 		image:
 			"https://plus.unsplash.com/premium_photo-1664540415069-bc45ce3e711e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmVzc2lvbmFsJTIwbWFufGVufDB8fDB8fHww",
-		quote:
-			"A superb experience from start to finish. Will definitely be back for more.",
-		name: "John Smith",
-		position: "Marketing Specialist",
+		quote: "Download",
+		name: "Level",
+		position: "A1",
+		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
 	},
 	{
 		id: 3,
 		image:
 			"https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2Zlc3Npb25hbCUyMHdvbWFufGVufDB8fDB8fHww",
-		quote:
-			"Never have I ever felt so satisfied with a purchase. Exceptional quality!",
-		name: "Emily R.",
-		position: "Product Manager",
+		quote: "Download",
+		name: "Level",
+		position: "A1",
+		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
 	},
 	{
 		id: 4,
 		image:
 			"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHByb2Zlc3Npb25hbCUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
-		quote: "Their customer service was outstanding and product is top-notch!",
-		name: "Michael B.",
-		position: "Project Coordinator",
+		quote: "Download",
+		name: "Level",
+		position: "A1",
+		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
 	},
 	{
 		id: 5,
 		image:
 			"https://images.unsplash.com/photo-1573496358961-3c82861ab8f4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHByb2Zlc3Npb25hbCUyMHdvbWFufGVufDB8fDB8fHww",
-		quote: "Five stars! Will definitely recommend to my colleagues.",
-		name: "Sarah W.",
-		position: "CEO",
+		quote: "Download",
+		name: "Level",
+		position: "A1",
+		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
 	},
 	{
 		id: 6,
 		image:
 			"https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=600",
-		quote: "Incredible results after just one month. Worth every penny!",
-		name: "Dave L.",
-		position: "Freelancer",
+		quote: "Download",
+		name: "Level",
+		position: "A1",
+		link: "https://tpotfztqgghafmdwdmfc.supabase.co/storage/v1/object/public/Lingo%20Tales/Blue%20and%20Green%20Illustrative%20Animal%20Story%20Book%20Cover%20(1).pdf",
 	},
 ];
 
@@ -72,29 +75,36 @@ const LatestBooks = () => {
 			<div className="grid grid-cols-4 gap-3 w-full h-[500px] p-4">
 				{testimonials
 					.slice(currentIndex, currentIndex + 4)
-					.map((testimonial, index) => (
-						<div
+					.map((testimonial) => (
+						<a
 							key={testimonial.id}
-							className="relative flex flex-col items-center justify-end bg-white rounded-lg shadow-lg overflow-hidden"
+							href={testimonial.link}
+							target="_blank"
+							rel="noopener noreferrer"
+							download
+							className="flex flex-col bg-white rounded-lg shadow-lg overflow-hidden"
 						>
-							<div className="absolute inset-0">
+							{/* Image Section */}
+							<div className="w-full h-5/6">
 								<img
 									src={testimonial.image}
 									className="w-full h-full object-cover"
 									alt="Testimonial"
 								/>
 							</div>
-							<div className="relative bg-white bg-opacity-90 p-4 flex flex-col justify-center items-center">
+							{/* Text Section */}
+							<div className="w-full bg-white p-4 flex flex-col justify-center items-center">
 								<p className="text-center text-gray-800 font-semibold">
 									{testimonial.quote}
 								</p>
-								{/* <p className="text-center text-sm text-gray-600 mt-1">
+								<p className="text-center text-sm text-gray-600 mt-1">
 									{testimonial.name}, {testimonial.position}
-								</p> */}
+								</p>
 							</div>
-						</div>
+						</a>
 					))}
 			</div>
+
 			<div className="flex items-center justify-center space-x-4">
 				<button
 					onClick={prevSlide}
