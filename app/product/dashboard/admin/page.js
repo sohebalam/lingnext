@@ -16,6 +16,7 @@ import {
 	ChevronDownIcon,
 	ChevronUpIcon,
 } from "@heroicons/react/24/solid"; // Heroicons for edit, delete, chevrons
+import { useAuth } from "@/app/service/AuthContext";
 
 export default function DisplayLevelsWithBooks() {
 	const [levels, setLevels] = useState([]);
@@ -23,6 +24,13 @@ export default function DisplayLevelsWithBooks() {
 	const [expandedLevels, setExpandedLevels] = useState([]); // Track expanded levels
 	const [expandedBooks, setExpandedBooks] = useState({}); // Track expanded books
 	const router = useRouter(); // Using the router hook
+	const { user } = useAuth();
+
+	useEffect(() => {
+		if (!user?.isAdmin) {
+			router.push("/");
+		}
+	}, [user, router]);
 
 	useEffect(() => {
 		const fetchBooks = async () => {

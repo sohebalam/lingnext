@@ -1,10 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config";
 import { collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/service/AuthContext";
 
 export default function ManagePages() {
+	const router = useRouter();
+	const { user } = useAuth();
+
 	const [pages, setPages] = useState([
 		{
 			id: Date.now().toString(),
@@ -17,6 +22,12 @@ export default function ManagePages() {
 			isCollapsed: false,
 		},
 	]);
+
+	useEffect(() => {
+		if (!user?.isAdmin) {
+			router.push("/");
+		}
+	}, [user, router]);
 	const [loading, setLoading] = useState(false);
 	const [title, setTitle] = useState(""); // Book title
 	const [level, setLevel] = useState(""); // Book level

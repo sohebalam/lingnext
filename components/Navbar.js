@@ -97,46 +97,47 @@ export function Navbar() {
 					</a>
 
 					{/* Forms Dropdown */}
-					<div className="relative">
-						<button
-							type="button"
-							className="dropdown-toggle py-2 px-3 flex items-center gap-2"
-							onClick={() => setIsFormsDropdownOpen(!isFormsDropdownOpen)}
-						>
-							Forms
-							<svg
-								className="w-3 h-3"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								strokeWidth="1.5"
-								stroke="currentColor"
+					{user?.isAdmin ? (
+						<div className="relative">
+							<button
+								type="button"
+								className="dropdown-toggle py-2 px-3 flex items-center gap-2"
+								onClick={() => setIsFormsDropdownOpen(!isFormsDropdownOpen)}
 							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									d="m19.5 8.25-7.5 7.5-7.5-7.5"
-								/>
-							</svg>
-						</button>
-						{isFormsDropdownOpen && (
-							<div className="dropdown-menu absolute bg-white text-black rounded-b-lg pb-2 w-48 z-50">
-								<a
-									href="/product/forms/bookform"
-									className="block px-6 py-2 hover:bg-gray-100"
+								Forms
+								<svg
+									className="w-3 h-3"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth="1.5"
+									stroke="currentColor"
 								>
-									Book Form
-								</a>
-								<a
-									href="/product/forms/language"
-									className="block px-6 py-2 hover:bg-gray-100"
-								>
-									Language Form
-								</a>
-							</div>
-						)}
-					</div>
-
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="m19.5 8.25-7.5 7.5-7.5-7.5"
+									/>
+								</svg>
+							</button>
+							{isFormsDropdownOpen && (
+								<div className="dropdown-menu absolute bg-white text-black rounded-b-lg pb-2 w-48 z-50">
+									<a
+										href="/product/forms/bookform"
+										className="block px-6 py-2 hover:bg-gray-100"
+									>
+										Book Form
+									</a>
+									<a
+										href="/product/forms/language"
+										className="block px-6 py-2 hover:bg-gray-100"
+									>
+										Language Form
+									</a>
+								</div>
+							)}
+						</div>
+					) : null}
 					{/* Dashboard Dropdown */}
 					<div className="relative">
 						<button
@@ -170,12 +171,14 @@ export function Navbar() {
 								>
 									Main Dashboard
 								</a>
-								<a
-									href="/product/dashboard/admin"
-									className="block px-6 py-2 hover:bg-gray-100"
-								>
-									Admin Dashboard
-								</a>
+								{user?.isAdmin ? (
+									<a
+										href="/product/dashboard/admin"
+										className="block px-6 py-2 hover:bg-gray-100"
+									>
+										Admin Dashboard
+									</a>
+								) : null}
 							</div>
 						)}
 					</div>
@@ -199,7 +202,7 @@ export function Navbar() {
 					) : (
 						<button
 							onClick={handleSignInClick}
-							className="flex items-center gap-x-2 text-blue-500"
+							className="flex items-center gap-x-2 text-black"
 						>
 							<Image src={User} alt="User Profile" width={20} height={20} />
 							<span className="hidden lg:block font-medium text-sm lg:text-base">

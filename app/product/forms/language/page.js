@@ -1,15 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config"; // Firebase config import
 import { collection, addDoc } from "firebase/firestore"; // Firestore methods
 import Language from "@/models/Languages"; // Import Language model
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/service/AuthContext";
 
 const AddLanguageForm = () => {
 	const [languageName, setLanguageName] = useState("");
 	const [languageCode, setLanguageCode] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
+
+	const router = useRouter();
+	const { user } = useAuth();
+
+	useEffect(() => {
+		if (!user?.isAdmin) {
+			router.push("/");
+		}
+	}, [user, router]);
 
 	// Function to handle form submission
 	const handleSubmit = async (e) => {
