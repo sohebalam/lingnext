@@ -22,6 +22,7 @@ export default function EditBook() {
 	const [book, setBook] = useState(null);
 	const [formData, setFormData] = useState({
 		title: "",
+		level: "",
 		pages: [],
 	});
 	const [loading, setLoading] = useState(true);
@@ -49,6 +50,7 @@ export default function EditBook() {
 				setFormData({
 					title: bookData.title || "",
 					pages: bookData.pages || [],
+					level: bookData.level || "",
 				});
 			} else {
 				console.log("No book found for the given bookId");
@@ -126,6 +128,20 @@ export default function EditBook() {
 						className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
 					/>
 				</div>
+
+				<div>
+					<label className="block text-gray-700 font-medium">Level</label>
+					<input
+						type="text"
+						value={formData.level}
+						onChange={(e) =>
+							setFormData({ ...formData, level: e.target.value })
+						}
+						className="w-full py-2 px-4 border rounded-md"
+					/>
+					<label className="block text-gray-700 font-medium">Pages</label>
+				</div>
+
 				<div>
 					<label className="block text-gray-700 font-medium">Pages</label>
 					<DndContext

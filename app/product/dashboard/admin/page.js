@@ -28,7 +28,7 @@ export default function DisplayLevelsWithBooks() {
 
 	useEffect(() => {
 		if (!user?.isAdmin) {
-			router.push("/");
+			// router.push("/");
 		}
 	}, [user, router]);
 
