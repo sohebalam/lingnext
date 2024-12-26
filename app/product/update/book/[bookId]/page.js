@@ -16,10 +16,14 @@ import {
 	SortableContext,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/service/AuthContext";
 
 export default function EditBook() {
 	const { bookId } = useParams(); // Using the `useParams` hook
 	const [book, setBook] = useState(null);
+	const router = useRouter();
+	const { user } = useAuth();
 	const [formData, setFormData] = useState({
 		title: "",
 		level: "",
@@ -27,7 +31,11 @@ export default function EditBook() {
 	});
 	const [loading, setLoading] = useState(true);
 
-	console.log("Book ID:", bookId);
+	useEffect(() => {
+		if (user && !user?.isAdmin) {
+			router.push("/");
+		}
+	}, [user, router]);
 
 	useEffect(() => {
 		if (bookId) {

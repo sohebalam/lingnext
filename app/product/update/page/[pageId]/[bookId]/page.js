@@ -4,16 +4,26 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { db } from "@/app/service/firebase/config";
 import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/service/AuthContext";
 
 export default function EditPage() {
 	const { bookId, pageId } = useParams(); // Get both bookId and pageId from URL params
 	const [loading, setLoading] = useState(true);
+	const router = useRouter();
+	const { user } = useAuth();
 	const [formData, setFormData] = useState({
 		id: "",
 		image: "", // Initialize with an empty string for image URL
 		isCover: false,
 		translations: [{ language: "", text: "" }],
 	});
+
+	useEffect(() => {
+		if (user && !user?.isAdmin) {
+			router.push("/");
+		}
+	}, [user, router]);
 
 	// Fetch book details when bookId and pageId are available
 	useEffect(() => {

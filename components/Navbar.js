@@ -121,7 +121,20 @@ export function Navbar() {
 								</svg>
 							</button>
 							{isFormsDropdownOpen && (
-								<div className="dropdown-menu">{/* Dropdown menu items */}</div>
+								<div className="dropdown-menu">
+									<a
+										href="/product/forms/bookform"
+										className="block px-6 py-2 hover:bg-white"
+									>
+										Book Form
+									</a>
+									<a
+										href="/product/forms/language"
+										className="block px-6 py-2 hover:bg-white"
+									>
+										Language Form
+									</a>
+								</div>
 							)}
 						</div>
 					) : null}
@@ -158,14 +171,14 @@ export function Navbar() {
 								>
 									Main Dashboard
 								</a>
-								{/* {user?.isAdmin ? ( */}
-								<a
-									href="/product/dashboard/admin"
-									className="block px-6 py-2 hover:bg-gray-100"
-								>
-									Admin Dashboard
-								</a>
-								{/* ) : null} */}
+								{user && user?.isAdmin ? (
+									<a
+										href="/product/dashboard/admin"
+										className="block px-6 py-2 hover:bg-gray-100"
+									>
+										Admin Dashboard
+									</a>
+								) : null}
 							</div>
 						)}
 					</div>
