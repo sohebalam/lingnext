@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { db } from "@/app/service/firebase/config"; // Firebase config
 import { useParams } from "next/navigation"; // For dynamic routing
 import { doc, getDoc } from "firebase/firestore"; // Firestore methods
-import { Navbar } from "@/components/Navbar2";
-import { Button } from "@/components/ui/button";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
 
 export default function BookDetailPage() {

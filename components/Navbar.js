@@ -3,20 +3,14 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Logo from "@/public/assets/Logo.png";
 import User from "@/public/assets/User.svg";
-import Menu from "@/public/assets/Menu.svg";
 import Link from "next/link";
 import { useAuth } from "@/app/service/AuthContext";
-const navLinks = [
-	{ name: "Features" },
-	{ name: "Pricing" },
-	{ name: "Enterprise" },
-	{ name: "Careers" },
-];
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+	const router = useRouter();
 	const { user, logOut } = useAuth();
 
 	const handleSignInClick = () => {
@@ -25,7 +19,7 @@ export function Navbar() {
 
 	const handleLogOutClick = () => {
 		logOut();
-		router.push("/");
+		router?.push("/");
 	};
 	// Toggle dropdown visibility
 	const toggleDropdown = () => {
@@ -133,12 +127,6 @@ export function Navbar() {
 						{isDropdownOpen && (
 							<div className="dropdown-menu absolute white text-black rounded-b-lg pb-2 w-48 z-50">
 								<a
-									href="/product/forms"
-									className="block px-6 py-2 hover:bg-white"
-								>
-									Level Form
-								</a>
-								<a
 									href="/product/forms/bookform"
 									className="block px-6 py-2 hover:bg-white"
 								>
@@ -198,19 +186,20 @@ export function Navbar() {
 
 					{/* Mobile Navigation */}
 					<div className="flex gap-x-8 items-center lg:ml-12">
-						<p className="hidden lg:block font-medium text-[#36485C] text-sm lg:text-base pr-[32px]">
-							Open an Account
-						</p>
-
+						<Link href="/auth/register">
+							<p className="hidden lg:block font-medium text-black text-sm lg:text-base pr-[32px]">
+								Open an Account
+							</p>
+						</Link>
 						{/* User Profile Section */}
 						{user ? (
 							<div className="relative flex items-center gap-x-4">
 								<Image src={User} alt="User Profile" width={20} height={20} />
-								<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
+								<span className="hidden font-medium text-blacklg:block text-sm lg:text-base">
 									{user.name}
 								</span>
 								<button
-									className="font-medium text-[#36485C] text-sm lg:text-base lg:block"
+									className="font-medium text-black text-sm lg:text-base lg:block"
 									onClick={handleLogOutClick}
 								>
 									Logout
@@ -222,9 +211,11 @@ export function Navbar() {
 								onClick={handleSignInClick}
 							>
 								<Image src={User} alt="User Profile" width={20} height={20} />
-								<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
-									Sign in
-								</span>
+								<Link href="/auth/login">
+									<span className="hidden font-medium text-[#36485C] lg:block text-sm lg:text-base">
+										Sign in
+									</span>
+								</Link>
 							</div>
 						)}
 					</div>

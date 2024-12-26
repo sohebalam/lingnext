@@ -9,79 +9,73 @@ export default function DisplayLevelsWithBooks() {
 	const [levels, setLevels] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [expandedLevels, setExpandedLevels] = useState([]); // Track expanded levels
-	const [expandedBooks, setExpandedBooks] = useState({}); // Track expanded books
 	const router = useRouter(); // Using the router hook
 
 	useEffect(() => {
-		const fetchLevels = async () => {
+		const fetchBooks = async () => {
 			setLoading(true);
 
 			try {
-				// Fetch levels from Firestore
-				const levelsSnapshot = await getDocs(collection(db, "levels"));
-				console.log("Levels Snapshot:", levelsSnapshot);
+				// Fetch all books from the "books" collection
+				const booksSnapshot = await getDocs(collection(db, "books"));
+				console.log("Books Snapshot:", booksSnapshot);
 
-				const levelsData = await Promise.all(
-					levelsSnapshot.docs.map(async (levelDoc) => {
-						const level = { id: levelDoc.id, ...levelDoc.data() };
+				const booksData = await Promise.all(
+					booksSnapshot.docs.map(async (bookDoc) => {
+						const book = { id: bookDoc.id, ...bookDoc.data() };
 
-						console.log("Level Data:", level); // Log each level's data to inspect it
+						console.log("Book Data:", book); // Log book data to inspect it
 
-						// Ensure books is always an array, even if undefined or empty
-						const bookIds = level.books || []; // Default to an empty array if 'books' is undefined
-						console.log("Book IDs:", bookIds); // Log book IDs to check the structure
+						// Ensure pages is always an array, even if undefined or empty
+						if (book.pages) {
+							console.log(`Page Details for Book ${book.id}:`, book.pages); // Log the page details
 
-						// Fetch books associated with the level
-						const books = await Promise.all(
-							bookIds.map(async (bookId) => {
-								const bookRef = doc(db, "books", bookId);
-								const bookSnap = await getDoc(bookRef);
-								console.log("Book Snapshot:", bookSnap); // Log book snapshot to check data
+							// Map page objects to their details, considering translations and other properties
+							const pageDetails = book.pages.map((page) => {
+								// Each page might have translations or other attributes
+								return {
+									id: page.id,
+									translations: page.translations || [],
+									isCover: page.isCover || false,
+									isCollapsed: page.isCollapsed || false,
+								};
+							});
 
-								return bookSnap.exists()
-									? { id: bookSnap.id, ...bookSnap.data() }
-									: null;
-							})
-						);
-
-						// Filter out any null books (in case a book does not exist)
-						const validBooks = books.filter((book) => book !== null);
-
-						// Fetch page details for each book's pages
-						for (const book of validBooks) {
-							if (book.pages) {
-								console.log(`Page Details for Book ${book.id}:`, book.pages); // Log the page details
-
-								// Map page objects to their details, considering translations and other properties
-								const pageDetails = book.pages.map((page) => {
-									// Each page might have translations or other attributes
-									return {
-										id: page.id,
-										translations: page.translations || [],
-										isCover: page.isCover || false,
-										isCollapsed: page.isCollapsed || false,
-									};
-								});
-
-								book.pages = pageDetails; // Update the pages with detailed objects
-							} else {
-								console.log("No pages in book:", book.id); // Log if no pages exist
-							}
+							book.pages = pageDetails; // Update the pages with detailed objects
+						} else {
+							console.log("No pages in book:", book.id); // Log if no pages exist
 						}
 
-						return { ...level, books: validBooks };
+						return book;
 					})
 				);
 
-				setLevels(levelsData);
+				// Group books by their level
+				const levelsGrouped = booksData.reduce((acc, book) => {
+					const level = book.level || "Unknown"; // Default to 'Unknown' if no level is set
+					if (!acc[level]) {
+						acc[level] = [];
+					}
+					acc[level].push(book);
+					return acc;
+				}, {});
+
+				// Convert the grouped levels object into an array of level objects
+				const levelsArray = Object.keys(levelsGrouped).map((level) => ({
+					id: level, // Using the level name as the ID
+					name: level, // Level name
+					books: levelsGrouped[level],
+				}));
+
+				setLevels(levelsArray);
 			} catch (error) {
-				console.error("Error fetching levels:", error);
+				console.error("Error fetching books:", error);
 			} finally {
 				setLoading(false);
 			}
 		};
 
-		fetchLevels();
+		fetchBooks();
 	}, []);
 
 	// Toggle expanded level
@@ -138,7 +132,7 @@ export default function DisplayLevelsWithBooks() {
 																{book.title ?? "No title available"}
 															</h4>
 															<div>
-																{book.pages.map((page) => (
+																{book.pages?.map((page) => (
 																	<div
 																		key={page.id}
 																		className="flex items-center space-x-2"

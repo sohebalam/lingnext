@@ -19,6 +19,7 @@ export default function ManagePages() {
 	]);
 	const [loading, setLoading] = useState(false);
 	const [title, setTitle] = useState(""); // Book title
+	const [level, setLevel] = useState(""); // Book level
 
 	// Add a new page with default values
 	const addPage = () => {
@@ -76,9 +77,10 @@ export default function ManagePages() {
 		setLoading(true);
 
 		try {
-			// Validation: Ensure the title and required fields are filled
+			// Validation: Ensure the title, level, and required fields are filled
 			if (
 				!title ||
+				!level ||
 				pages.some(
 					(page) =>
 						!page.image ||
@@ -108,6 +110,7 @@ export default function ManagePages() {
 
 			const newBook = {
 				title,
+				level,
 				pages: updatedPages,
 			};
 
@@ -132,6 +135,18 @@ export default function ManagePages() {
 						type="text"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
+						required
+						className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+					/>
+				</div>
+
+				{/* Book Level */}
+				<div>
+					<label className="block font-medium text-gray-700">Book Level</label>
+					<input
+						type="text"
+						value={level}
+						onChange={(e) => setLevel(e.target.value)}
 						required
 						className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
 					/>

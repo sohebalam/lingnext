@@ -24,7 +24,7 @@ const SignIn = () => {
 			sessionStorage.setItem("user", true);
 			setEmail("");
 			setPassword("");
-			router.push("/product/home");
+			router.push("/product/dashboard");
 		} catch (e) {
 			console.error("Email Sign-In Error:", e);
 		}
@@ -32,7 +32,7 @@ const SignIn = () => {
 	const handleSignInWithGoogle = async () => {
 		try {
 			await signIn();
-			router.push("/product/home");
+			router.push("/product/dashboard");
 		} catch (e) {
 			console.error("Email Sign-In Error:", e);
 		}
