@@ -183,9 +183,6 @@ export function Navbar() {
 
 				{/* User Actions */}
 				<div className="flex items-center gap-x-4 ml-auto">
-					<p className="hidden lg:block font-medium text-black text-sm lg:text-base">
-						Open Free
-					</p>
 					{user ? (
 						<div className="flex items-center gap-x-2">
 							<Image src={User} alt="User Profile" width={20} height={20} />
