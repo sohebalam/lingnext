@@ -8,11 +8,12 @@ import { useAuth } from "@/app/service/AuthContext";
 import { useRouter } from "next/navigation";
 
 export function Navbar() {
-	const [isDropdownOpen, setIsDropdownOpen] = useState(null); // Tracks which dropdown is open
+	const [isFormsDropdownOpen, setIsFormsDropdownOpen] = useState(false);
+	const [isDashboardDropdownOpen, setIsDashboardDropdownOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-	const { user, logOut } = useAuth();
 	const router = useRouter();
+	const { user, logOut } = useAuth();
 
 	const handleSignInClick = () => {
 		router.push("/auth/login");
@@ -23,24 +24,20 @@ export function Navbar() {
 		router.push("/");
 	};
 
-	// Toggle dropdown visibility
-	const toggleDropdown = (dropdown) => {
-		setIsDropdownOpen((prev) => (prev === dropdown ? null : dropdown));
-	};
-
-	// Toggle mobile menu visibility
+	// Toggle mobile menu
 	const toggleMobileMenu = () => {
 		setIsMobileMenuOpen(!isMobileMenuOpen);
 	};
 
-	// Close dropdown and mobile menu when clicking outside
+	// Close menus when clicking outside
 	const handleClickOutside = (e) => {
 		if (
 			!e.target.closest(".dropdown-toggle") &&
-			!e.target.closest(".dropdown-menu") &&
+			!e.target.closest(".navigation-menu") &&
 			!e.target.closest(".mobile-menu-button")
 		) {
-			setIsDropdownOpen(null);
+			setIsFormsDropdownOpen(false);
+			setIsDashboardDropdownOpen(false);
 			setIsMobileMenuOpen(false);
 		}
 	};
@@ -51,6 +48,7 @@ export function Navbar() {
 			window.removeEventListener("click", handleClickOutside);
 		};
 	}, []);
+
 	return (
 		<nav className="bg-white fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
 			<div className="container mx-auto px-4 md:flex items-center gap-6 py-4">
@@ -98,12 +96,12 @@ export function Navbar() {
 						Contact Us
 					</a>
 
-					{/* Dropdown Menus */}
+					{/* Forms Dropdown */}
 					<div className="relative">
 						<button
 							type="button"
 							className="dropdown-toggle py-2 px-3 flex items-center gap-2"
-							onClick={toggleDropdown}
+							onClick={() => setIsFormsDropdownOpen(!isFormsDropdownOpen)}
 						>
 							Forms
 							<svg
@@ -121,7 +119,7 @@ export function Navbar() {
 								/>
 							</svg>
 						</button>
-						{isDropdownOpen && (
+						{isFormsDropdownOpen && (
 							<div className="dropdown-menu absolute bg-white text-black rounded-b-lg pb-2 w-48 z-50">
 								<a
 									href="/product/forms/bookform"
@@ -138,13 +136,56 @@ export function Navbar() {
 							</div>
 						)}
 					</div>
+
+					{/* Dashboard Dropdown */}
+					<div className="relative">
+						<button
+							type="button"
+							className="dropdown-toggle py-2 px-3 flex items-center gap-2"
+							onClick={() =>
+								setIsDashboardDropdownOpen(!isDashboardDropdownOpen)
+							}
+						>
+							Dashboard
+							<svg
+								className="w-3 h-3"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth="1.5"
+								stroke="currentColor"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="m19.5 8.25-7.5 7.5-7.5-7.5"
+								/>
+							</svg>
+						</button>
+						{isDashboardDropdownOpen && (
+							<div className="dropdown-menu absolute bg-white text-black rounded-b-lg pb-2 w-48 z-50">
+								<a
+									href="/product/dashboard"
+									className="block px-6 py-2 hover:bg-gray-100"
+								>
+									Main Dashboard
+								</a>
+								<a
+									href="/product/dashboard/admin"
+									className="block px-6 py-2 hover:bg-gray-100"
+								>
+									Admin Dashboard
+								</a>
+							</div>
+						)}
+					</div>
 				</div>
 
 				{/* User Actions */}
 				<div className="flex items-center gap-x-4 ml-auto">
-					{/* <p className="hidden lg:block font-medium text-black text-sm lg:text-base">
+					<p className="hidden lg:block font-medium text-black text-sm lg:text-base">
 						Open Free
-					</p> */}
+					</p>
 					{user ? (
 						<div className="flex items-center gap-x-2">
 							<Image src={User} alt="User Profile" width={20} height={20} />
