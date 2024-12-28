@@ -12,6 +12,12 @@ export default function DisplayLevelsWithBooks() {
 	const router = useRouter(); // Using the router hook
 
 	useEffect(() => {
+		if (!user) {
+			router.push("/");
+		}
+	}, [user, router]);
+
+	useEffect(() => {
 		const fetchBooks = async () => {
 			setLoading(true);
 
