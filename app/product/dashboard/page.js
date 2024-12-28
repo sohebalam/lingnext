@@ -4,12 +4,14 @@ import { db } from "@/app/service/firebase/config"; // Import Firebase config
 import { useRouter } from "next/navigation"; // Import the router
 import { collection, getDocs, doc, getDoc } from "firebase/firestore"; // Firestore methods
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+import { useAuth } from "@/app/service/AuthContext";
 
 export default function DisplayLevelsWithBooks() {
 	const [levels, setLevels] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [expandedLevels, setExpandedLevels] = useState([]); // Track expanded levels
 	const router = useRouter(); // Using the router hook
+	const { user } = useAuth();
 
 	useEffect(() => {
 		if (!user) {
