@@ -74,8 +74,8 @@ const LatestBooks = () => {
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center space-y-4 bg-gradient-to-r from-[#b2b9c7] to-[#545f75] md:min-h-[35vh] lg:min-h-[40rem]">
-			<div className="grid grid-cols-4 gap-3 w-full h-[500px] p-4">
+		<div className="flex flex-col items-center justify-center space-y-4 bg-gradient-to-r from-[#b2b9c7] to-[#545f75] md:min-h-[45vh] lg:min-h-[50rem] ">
+			<div className="grid grid-cols-4 gap-3 w-full h-[35rem] lg:min-h-[42rem] p-45">
 				{testimonials
 					.slice(currentIndex, currentIndex + 4)
 					.map((testimonial) => (
