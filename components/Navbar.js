@@ -92,8 +92,8 @@ export function Navbar() {
 					<a href="/" className="py-2 px-3 block">
 						Home
 					</a>
-					<a href="/contact" className="py-2 px-3 block">
-						Contact Us
+					<a href="/support" className="py-2 px-3 block">
+						Support Us
 					</a>
 
 					{/* Forms Dropdown */}
