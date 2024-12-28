@@ -11,18 +11,18 @@ export default function ManagePages() {
 	const router = useRouter();
 	const { user } = useAuth();
 
-	const [pages, setPages] = useState([
-		{
-			id: uuidv4(),
-			image: null,
-			isCover: false,
-			translations: [
-				{ language: "en", text: "" },
-				{ language: "ar", text: "" },
-			],
-			isCollapsed: false,
-		},
-	]);
+	// const [pages, setPages] = useState([
+	// 	{
+	// 		id: uuidv4(),
+	// 		image: null,
+	// 		isCover: false,
+	// 		translations: [
+	// 			{ language: "en", text: "" },
+	// 			{ language: "ar", text: "" },
+	// 		],
+	// 		isCollapsed: false,
+	// 	},
+	// ]);
 
 	useEffect(() => {
 		if (user && !user?.isAdmin) {
@@ -38,7 +38,7 @@ export default function ManagePages() {
 		setPages((prev) => [
 			...prev,
 			{
-				id: Date.now().toString(),
+				id: uuidv4(),
 				image: null,
 				isCover: false,
 				translations: [
