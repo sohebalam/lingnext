@@ -8,16 +8,16 @@ import { useAuth } from "@/app/service/AuthContext";
 
 export default function DisplayLevelsWithBooks() {
 	const [levels, setLevels] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [expandedLevels, setExpandedLevels] = useState([]); // Track expanded levels
 	const router = useRouter(); // Using the router hook
 	const { user } = useAuth();
 
 	useEffect(() => {
-		if (!user) {
+		if (!loading && !user) {
 			router.push("/");
 		}
-	}, [user, router]);
+	}, [user, loading, router]);
 
 	useEffect(() => {
 		const fetchBooks = async () => {
@@ -99,7 +99,9 @@ export default function DisplayLevelsWithBooks() {
 	const handleBookClick = (bookId) => {
 		router.push(`/product/book/${bookId}`); // Dynamically push to the book's page
 	};
-
+	if (loading) {
+		return <div>Loading...</div>;
+	}
 	return (
 		<>
 			<div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-md shadow-md space-y-8">
