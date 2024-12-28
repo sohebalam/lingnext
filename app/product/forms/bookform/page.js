@@ -5,6 +5,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/service/AuthContext";
+import { v4 as uuidv4 } from "uuid";
 
 export default function ManagePages() {
 	const router = useRouter();
@@ -12,7 +13,7 @@ export default function ManagePages() {
 
 	const [pages, setPages] = useState([
 		{
-			id: Date.now().toString(),
+			id: uuidv4(),
 			image: null,
 			isCover: false,
 			translations: [
