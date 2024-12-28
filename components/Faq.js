@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const items = [
 	{
-		question: "Ut enim ad minima veniam, quis nostrum exercitationem ullam?",
+		question: "Ut enim ad minima veniam, quis nostrum exercitationem ullam1?",
 		answer:
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.",
 	},
