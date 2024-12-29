@@ -100,28 +100,31 @@ export default function BookDetailPage() {
 						</div>
 
 						{/* Pages Display */}
-						<div className="flex flex-wrap justify-center w-full gap-1">
+						<div className="flex justify-center items-center w-full gap-1">
 							{currentPages.map((page, index) => (
 								<div
 									key={page.id}
-									className="flex flex-col bg-white shadow-md border border-slate-200 rounded-lg my-6 w-full sm:w-[30rem]"
+									className="w-full h-[90vh] flex rounded-lg my-6 sm:w-[40rem]" // Increased width from 30rem to 40rem
 								>
-									<div className="m-2.5 overflow-hidden rounded-md h-[33rem] flex justify-center items-center">
+									<div className="w-full h-full flex flex-col justify-between items-center overflow-hidden">
 										<img
 											className="w-full h-full object-cover"
 											src={page.image || "/fallback-image.jpg"}
 											alt={`Page ${currentPage + index + 1}`}
 										/>
-									</div>
-									<div className="p-6 text-center">
-										<div className="text-base text-slate-800 mt-4 font-light">
-											{page.translations &&
-												page.translations.map((translation, i) => (
-													<p key={i}>
-														{translation.text || "No translation available."}
-													</p>
-												))}
-										</div>
+										{!page.isCover && ( // Include translations for non-cover pages
+											<div className="p-6 text-center w-full bg-white">
+												<div className="text-base text-slate-800 mt-3 font-light">
+													{page.translations &&
+														page.translations.map((translation, i) => (
+															<p key={i}>
+																{translation.text ||
+																	"No translation available."}
+															</p>
+														))}
+												</div>
+											</div>
+										)}
 									</div>
 								</div>
 							))}
