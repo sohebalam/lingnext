@@ -1,20 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { db } from "@/app/service/firebase/config";
-import { doc, getDoc } from "firebase/firestore";
-import { useRouter } from "next/navigation";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/app/service/AuthContext";
 
 export default function EditPage() {
-	const { bookId, pageId } = useParams(); // Get both bookId and pageId from URL params
-	const [loading, setLoading] = useState(true);
+	const { bookId, pageId } = useParams();
 	const router = useRouter();
 	const { user } = useAuth();
+	const [loading, setLoading] = useState(true);
 	const [formData, setFormData] = useState({
 		id: "",
-		image: "", // Initialize with an empty string for image URL
+		image: "",
 		isCover: false,
 		translations: [{ language: "", text: "" }],
 	});
@@ -25,20 +24,12 @@ export default function EditPage() {
 		}
 	}, [user, router]);
 
-	// Fetch book details when bookId and pageId are available
 	useEffect(() => {
 		if (bookId && pageId) {
-			console.log(
-				"Fetching book details for bookId:",
-				bookId,
-				"pageId:",
-				pageId
-			); // Debugging
 			fetchBookDetails();
 		}
 	}, [bookId, pageId]);
 
-	// Fetch book details from Firestore and extract the page
 	const fetchBookDetails = async () => {
 		try {
 			setLoading(true);
@@ -50,8 +41,7 @@ export default function EditPage() {
 				const page = bookData.pages.find((p) => p.id === pageId);
 
 				if (page) {
-					console.log("Fetched page data:", page); // Debugging
-					setFormData(page); // Set page data to formData, including image
+					setFormData(page);
 				} else {
 					console.log("No page found for the given pageId");
 				}
@@ -65,7 +55,6 @@ export default function EditPage() {
 		}
 	};
 
-	// Handle input changes in form fields
 	const handleInputChange = (e) => {
 		const { name, value, type, checked } = e.target;
 		setFormData((prev) => ({
@@ -74,7 +63,6 @@ export default function EditPage() {
 		}));
 	};
 
-	// Handle changes to translations array
 	const handleTranslationChange = (index, field, value) => {
 		const updatedTranslations = [...formData.translations];
 		updatedTranslations[index][field] = value;
@@ -84,54 +72,44 @@ export default function EditPage() {
 		});
 	};
 
-	// Show loading message if the data is still being fetched
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setLoading(true);
+
+		try {
+			const bookRef = doc(db, "books", bookId);
+			const bookSnap = await getDoc(bookRef);
+
+			if (bookSnap.exists()) {
+				const bookData = bookSnap.data();
+				const updatedPages = bookData.pages.map((page) =>
+					page.id === pageId ? formData : page
+				);
+
+				await updateDoc(bookRef, { pages: updatedPages });
+				alert("Page updated successfully!");
+				router.push(`/product/book/${bookId}`);
+			} else {
+				console.log("No book found for the given bookId");
+			}
+		} catch (error) {
+			console.error("Error updating page:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	if (loading) return <p>Loading...</p>;
 
 	return (
 		<div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-md shadow-md">
 			<h2 className="text-2xl font-bold text-gray-800 mb-4">Edit Page</h2>
-			<form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-				{/* Picture Section */}
-				<div className="flex items-center gap-4">
-					<div>
-						<label className="block font-medium text-gray-700">
-							Update Picture
-						</label>
-						<input
-							type="file"
-							accept="image/*"
-							onChange={(e) => {
-								const file = e.target.files[0];
-								if (file) {
-									const reader = new FileReader();
-									reader.onload = () => {
-										setFormData((prev) => ({
-											...prev,
-											imageUrl: reader.result, // Preview the new image
-										}));
-									};
-									reader.readAsDataURL(file);
-								}
-							}}
-							className="block mt-1"
-						/>
-					</div>
-					{/* Avatar display */}
-					{formData.image && (
-						<div>
-							<img
-								src={formData.image} // This should display the image URL from Firestore
-								alt="Avatar"
-								className="w-16 h-16 rounded-full border-2 border-gray-300"
-							/>
-							{/* <p>Image URL: {formData.image}</p>{" "} */}
-							{/* Debug: Display the image URL */}
-						</div>
-					)}
-				</div>
-
-				{/* Cover Page Checkbox */}
-				<div className="flex items-center gap-2">
+			<form onSubmit={handleSubmit} className="space-y-6">
+				{/* Other form fields */}
+				<div>
+					<label className="font-medium text-gray-700">
+						Is this the cover page?
+					</label>
 					<input
 						type="checkbox"
 						name="isCover"
@@ -139,9 +117,6 @@ export default function EditPage() {
 						onChange={handleInputChange}
 						className="h-5 w-5 text-blue-600"
 					/>
-					<label className="font-medium text-gray-700">
-						Is this the cover page?
-					</label>
 				</div>
 
 				{/* Translations Section */}
@@ -174,12 +149,11 @@ export default function EditPage() {
 				</div>
 
 				<button
-					onClick={() => {
-						// Handle saving logic here
-					}}
+					type="submit"
+					disabled={loading}
 					className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
 				>
-					Save Changes
+					{loading ? "Updating..." : "Update Page"}
 				</button>
 			</form>
 		</div>
