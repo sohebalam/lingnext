@@ -9,10 +9,12 @@ import {
 	onAuthStateChanged,
 } from "firebase/auth";
 import { useAuth } from "@/app/service/AuthContext";
+import Link from "next/link";
 
 const SignIn = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+
 	const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
 	const router = useRouter();
 	const { signIn } = useAuth();
@@ -24,6 +26,8 @@ const SignIn = () => {
 			sessionStorage.setItem("user", true);
 			setEmail("");
 			setPassword("");
+			setName("");
+
 			router.push("/product/dashboard");
 		} catch (e) {
 			console.error("Email Sign-In Error:", e);
@@ -91,6 +95,19 @@ const SignIn = () => {
 					>
 						Sign In with Google
 					</button>
+				</div>
+				<div className="text-center my-4">
+					<div className="text-center my-4">
+						<span className="text-white">
+							Don't have an account?{" "}
+							<button
+								// onClick={handleSignInWithGoogle}
+								className="text-blue-500 underline hover:text-blue-400"
+							>
+								<Link href={"/auth/register"}>Sign Up</Link>
+							</button>
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>

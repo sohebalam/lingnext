@@ -9,7 +9,8 @@ import {
 } from "firebase/auth";
 import { auth, db } from "@/app/service/firebase/config";
 import UserModel from "@/models/User"; // Adjust the path as needed
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const AuthContext = createContext();
 
@@ -68,3 +69,33 @@ export function AuthProvider({ children }) {
 export function useAuth() {
 	return useContext(AuthContext);
 }
+
+export const registerUser = async (email, password, name) => {
+	const auth = getAuth();
+	console.log(email, password, name);
+	try {
+		const userCredential = await createUserWithEmailAndPassword(
+			auth,
+			email,
+			password
+		);
+		const user = userCredential.user;
+
+		// Save user data to Firestore
+		// await db.collection("users").doc(user.uid).set({
+		// 	name: name,
+		// 	email: email,
+		// 	name: name,
+		// });
+		await setDoc(doc(db, "users", user.uid), {
+			name: name,
+			email: email,
+			name: name,
+		});
+
+		console.log("User registered and saved to Firestore:", user);
+	} catch (error) {
+		console.error("Error registering user:", error);
+		throw error;
+	}
+};
